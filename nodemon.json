@@ -1,0 +1,9 @@
+{
+    "ignore": [
+      "dat*.json"
+    ],
+    "watch": [
+      "src/"
+    ],
+    "ext": "js, yaml"
+  }

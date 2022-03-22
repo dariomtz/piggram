@@ -1,0 +1,385 @@
+swagger: "2.0"
+info:
+  description: "Description"
+  version: "1.0.0"
+  title: "PIGGRAM"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "email"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+- name: "user"
+  description: "Operations about user"
+- name: "post"
+  description: "Operations about posts"
+- name: "comment"
+  description: "Operations about comment"
+- name: "likes"
+  description: "Operations about likes"
+- name: "follows"
+  description: "Operations about follows"
+
+schemes:
+- "https"
+- "http"
+paths:
+  /signup:
+    post:
+      tags:
+      - "user"
+      summary: "Creates a new account and logs in"
+      description: ""
+      operationId: "signup"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User information"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+  /login:
+    post:
+      tags:
+      - "user"
+      summary: "Logs user into account"
+      description: ""
+      operationId: "login"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User credentials"
+        required: true
+        schema:
+          $ref: "#/definitions/UserCredentials"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+        
+  /logout:
+    post:
+      tags:
+      - "user"
+      summary: "Logout from current account"
+      description: ""
+      operationId: "logout"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+        
+  /user/{id}:
+    get:
+      tags:
+      - "user"
+      summary: "Gets specified user"
+      description: ""
+      operationId: "getUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "brief"
+        required: true
+        type: "boolean"
+        description: "If set, will return only username and image"
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "User information"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+    put:
+      tags:
+      - "user"
+      summary: "Edits specified user"
+      description: ""
+      operationId: "modifyUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "User information"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+    delete:
+      tags:
+      - "user"
+      summary: "Edits specified user"
+      description: ""
+      operationId: "deleteUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "User information"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+        
+  /posts:
+    get:
+      tags:
+      - "post"
+      summary: "Returns feed of posts"
+      description: ""
+      operationId: "getPosts"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+    post:
+      tags:
+      - "post"
+      summary: "Creates new post"
+      description: ""
+      operationId: "createPost"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Post information"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"    
+  
+  /posts/{postId}:
+    put:
+      tags:
+      - "post"
+      summary: "Updates existing post"
+      description: ""
+      operationId: "updatePost"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "postId"
+        type: "integer"
+        required: true
+      - in: "body"
+        name: "body"
+        description: "Post information"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users" 
+    delete:
+      tags:
+      - "post"
+      summary: "Updates existing post"
+      description: ""
+      operationId: "deletePost"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "postId"
+        type: "integer"
+        required: true
+      - in: "body"
+        name: "body"
+        description: "Post information"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users" 
+    
+  /posts/users/{userId}:
+    get:
+      tags:
+      - "post"
+      summary: "Returns posts of specified user"
+      description: ""
+      operationId: "getUserPosts"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "userId"
+        type: "integer"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+        "405":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"
+   
+securityDefinitions:
+  piggram_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:users: "modify user information"
+      read:users: "read user information"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      description:
+        type: "string"
+      password:
+        type: "string"
+      image:
+        type: "string"
+      creationTimestamp:
+        type: "string"
+      dateOfBirth:
+        type: "string"
+      twitter:
+        type: "string"
+  UserCredentials:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
