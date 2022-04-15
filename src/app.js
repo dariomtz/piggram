@@ -8,12 +8,17 @@ require('./config/passport');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 
+//Swagger
 const swaggerSetup = YAML.load('./src/docs/swagger.yaml');
 
 const app = express();
 
 app.use(express.json());
 
+//MongoDB (mongoose)
+require('./config/db');
+
+//Home page
 app.get('/', (req, res) => {
     res.send('Hello World!!!');
   });
