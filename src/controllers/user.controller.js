@@ -11,7 +11,7 @@ class User {
     // fetch the users
     let users = getJSON();
     // found the users
-    let ind = users.findIndex(user => user.googleId === id);
+    let ind = users.findIndex(user => user.id === id);
     if(ind !== -1){
       //   if found return the user
       return users[ind];
