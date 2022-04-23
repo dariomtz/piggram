@@ -1,35 +1,31 @@
-const {getJSON, saveJSON} = require('../utils/fileHelpers');
+const UserModel = require('../models/schemas/user');
 
 class User {
-    //TODO: Replace local implementation with mongodb version.
-  constructor() {
-    this.saveData = saveJSON;
-    this.fetchData = getJSON;
-  }
 
-  async find(id) {
-    // fetch the users
-    let users = getJSON();
-    // found the users
-    let ind = users.findIndex(user => user.id === id);
-    if(ind !== -1){
-      //   if found return the user
-      return users[ind];
+  async findByPassportId(id) {
+    let doc = await UserModel.findOne({passportID:id}).lean();
+    console.log('find',doc);
+    if(doc == null){
+      return Promise.reject(new Error(`User with id ${id} not found`));
     }
-    //   if not found return Promise.reject(new Error(`User with id ${id} not found`));
-    return Promise.reject(new Error(`User with id ${id} not found`));
-
+    return doc;
   }
 
-  async create(user) {
-    // fetch the users
-    let users = getJSON();
-    // append the user to all the users
-    users.push(user);
-    // save the users
-    saveJSON(users);
-    // return the saved user
-    return user;
+  async create(userData) {
+    var user = new UserModel(userData);
+    let doc;
+    try{
+         doc = await user.save();
+    }catch(err){
+      return Promise.reject(new Error(`Unable to create the user`));
+    }
+    console.log('create',doc);
+    return doc;
+  }
+
+  async exist(id){
+    let doc = await UserModel.findById(id);
+    return doc != null;
   }
 };
 

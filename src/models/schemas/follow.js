@@ -17,6 +17,6 @@ const followSchema = new mongoose.Schema({
     }
 });
 
-const Follow = mongoose.model('Like', followSchema);
+const FollowModel = mongoose.model('Follow', followSchema);
 
-module.exports = Follow;
+module.exports = FollowModel;

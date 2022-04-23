@@ -4,13 +4,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook');
 
 passport.serializeUser(function (user, done) {
-    //TODO: Replace local for MongoDB implementation
-    done(null, user.id);
+    done(null, user.passportID);
     });
 
 passport.deserializeUser(function (id, done) {
     //TODO: Replace local for MongoDB implementation
-    User.find(id)
+    User.findByPassportId(id)
     .then(user => done(null, user))
     .catch(err => done(err));
     });
@@ -25,18 +24,20 @@ new GoogleStrategy(
     callbackURL: 'http://localhost:3000/auth/google/callback',
     },
     function (accessToken, refreshToken, profile, done) {
-        //TODO: replace local implementation for MongoDB implementation
-        User.find(profile.id)
+        //console.log(profile);
+        User.findByPassportId(profile.id)
         .then((user)=>{
             done(null,user);
         })
         .catch((err)=>{
             User.create({
-                id: profile.id,
+                passportID: profile.id,
+                username: 'tempUsername',//TODO: Find how to change the username
                 email: profile.emails[0].value,
-                timestamp: Date.now(),
                 name:  profile.displayName,
-                imagenUrl: profile.photos[0].value
+                description: "Hey I'm using piggram",
+                image: profile.photos[0].value,
+                //TODO: Get date of birth
             }).then(user=>done(null, user)
             ).catch(err=>done(err));
             
@@ -48,22 +49,24 @@ new GoogleStrategy(
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: 'http://localhost:3000/auth/facebook/callback'
+    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    profileFields: ['id', 'displayName', 'picture', 'email','birthday']
   },
   function(accessToken, refreshToken, profile, done) {
-    //TODO: replace local implementation for MongoDB implementation
-    console.log(profile);
-    User.find(profile.id)
+    //console.log(profile);
+    User.findByPassportId(profile.id)
     .then((user)=>{
         done(null,user);
     })
     .catch((err)=>{
         User.create({
-            id: profile.id,
-            email: profile.email,
-            timestamp: Date.now(),
+            passportID: profile.id,
+            username: 'tempUsername',
             name:  profile.displayName,
-            imagenUrl: profile.profileUrl,
+            description: 'Hey Im using piggram',
+            email: profile.emails[0].value,            
+            image: profile.photos[0].value,
+
         }).then(user=>done(null, user)
         ).catch(err=>done(err));
         

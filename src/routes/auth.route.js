@@ -64,5 +64,9 @@ router.get('/facebook/callback',
     }
 );
 
+router.get('/test', (req, res)=>{
+  res.send(req.user);
+})
+
 
 module.exports = router;
