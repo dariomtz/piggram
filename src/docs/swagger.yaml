@@ -543,7 +543,7 @@ paths:
         - "write:users"
         - "read:users"
     
-  /follos/{userId}:
+  /follows/{userId}:
     get:
       tags:
       - "follows"
