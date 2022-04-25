@@ -123,7 +123,7 @@ paths:
       - in: "path"
         name: "id"
         required: true
-        type: "integer"
+        type: "String"
       responses:
         200:
           description: "Success"
@@ -155,7 +155,7 @@ paths:
       - in: "path"
         name: "id"
         required: true
-        type: "integer"
+        type: "String"
       - in: "body"
         name: "body"
         description: "User information"
@@ -189,7 +189,7 @@ paths:
       - in: "path"
         name: "id"
         required: true
-        type: "integer"
+        type: "String"
         schema:
           $ref: "#/definitions/User"
       responses:
@@ -274,7 +274,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       - in: "body"
         name: "body"
@@ -304,7 +304,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -330,7 +330,7 @@ paths:
       parameters:
       - in: "path"
         name: "userId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -354,7 +354,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -377,7 +377,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       - in: "body"
         name: "body"
@@ -408,7 +408,7 @@ paths:
       parameters:
       - in: "path"
         name: "commentId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -431,7 +431,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       - in: "body"
         name: "body"
@@ -460,7 +460,7 @@ paths:
       parameters:
       - in: "path"
         name: "commentId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -485,7 +485,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -508,7 +508,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -531,7 +531,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -544,29 +544,6 @@ paths:
         - "read:users"
     
   /follows/{userId}:
-    get:
-      tags:
-      - "follows"
-      summary:  "Returns user's list of followers"
-      operationId: "getFollows"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "userId"
-        type: "integer"
-        required: true
-      responses:
-        "200":
-          description: "Success"
-        "400":
-          description: "Invalid input"
-      security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
     post:
       tags:
       - "follows"
@@ -579,7 +556,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -602,7 +579,7 @@ paths:
       parameters:
       - in: "path"
         name: "postId"
-        type: "integer"
+        type: "String"
         required: true
       responses:
         "200":
@@ -613,8 +590,55 @@ paths:
       - piggram_auth:
         - "write:users"
         - "read:users"
-    
 
+  /follows/{userId}/followers:
+    get:
+      tags:
+      - "follows"
+      summary:  "Returns user's list of followers"
+      operationId: "getFollows"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "userId"
+        type: "String"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"  
+  /follows/{userId}/following:
+    get:
+      tags:
+      - "follows"
+      summary:  "Returns user's list of following"
+      operationId: "getFollows"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "userId"
+        type: "String"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+      - piggram_auth:
+        - "write:users"
+        - "read:users"  
 
 securityDefinitions:
   piggram_auth:

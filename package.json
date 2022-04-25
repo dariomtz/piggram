@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/dariomtz/piggram#readme",
   "dependencies": {
+    "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
     "cookie-session": "^2.0.0",
     "dotenv": "^16.0.0",

@@ -32,7 +32,7 @@ new GoogleStrategy(
         .catch((err)=>{
             User.create({
                 passportID: profile.id,
-                username: 'tempUsername',//TODO: Find how to change the username
+                //username: 'tempUsername',//TODO: Find how to change the username
                 email: profile.emails[0].value,
                 name:  profile.displayName,
                 description: "Hey I'm using piggram",
@@ -61,7 +61,7 @@ passport.use(new FacebookStrategy({
     .catch((err)=>{
         User.create({
             passportID: profile.id,
-            username: 'tempUsername',
+            //username: 'tempUsername',
             name:  profile.displayName,
             description: 'Hey Im using piggram',
             email: profile.emails[0].value,            
