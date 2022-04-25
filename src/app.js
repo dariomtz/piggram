@@ -33,6 +33,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Swagger 
-app.use('/TSP-docs', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
+
+app.use((err, req, res, next) => {
+  //TODO: Make this works
+  console.log('aquiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+  if (err.details) return res.status(400).send(err.details[0].message);
+  if (err instanceof NotFoundError) {
+    return res.status(404).send(err.message);
+  }
+  res.status(503).send('Oooops something went wrong, try again');
+});
 
 module.exports = app;

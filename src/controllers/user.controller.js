@@ -1,10 +1,11 @@
 const UserModel = require('../models/schemas/user');
+const axios = require('axios').default;
 
 class User {
 
   async findByPassportId(id) {
     let doc = await UserModel.findOne({passportID:id}).lean();
-    console.log('find',doc);
+    //console.log('find',doc);
     if(doc == null){
       return Promise.reject(new Error(`User with id ${id} not found`));
     }
@@ -12,6 +13,11 @@ class User {
   }
 
   async create(userData) {
+    if(userData['username']== null){
+
+      userData['username'] = (await axios({method:'get',url:'https://randomuser.me/api/?inc=login'})).data['results'][0]['login']['username'];
+      console.log(userData['username']);
+    }
     var user = new UserModel(userData);
     let doc;
     try{
@@ -23,7 +29,7 @@ class User {
     return doc;
   }
 
-  async exist(id){
+  async existById(id){
     let doc = await UserModel.findById(id);
     return doc != null;
   }
