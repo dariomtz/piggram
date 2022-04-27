@@ -1,5 +1,3 @@
-const { ans } = require("./Follow.model.mock");
-
 class MongooseMock {
     ans = null;
     pos = 0;
