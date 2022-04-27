@@ -8,19 +8,6 @@ router.get("/login", (req, res) => {
   res.sendFile(path.resolve("src/public/html/login.html"));
 });
 
-// GET /google/login
-router.get(
-  "/google/login",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-// GET /google/callback
-router.get("/google/callback", passport.authenticate("google"), (req, res) => {
-  //console.log(req.query.code);
-  // Successful authentication, redirect home.
-  res.redirect("/");
-});
-
 // GET /verifyLogin
 router.get("/verifyLogin", (req, res) => {
   if (req.user != null) {
@@ -37,19 +24,17 @@ router.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-
 // GET /google/login
-router.get('/google/login', passport.authenticate('google', { scope:
-    ['profile', 'email'] })
+router.get(
+  "/google/login",
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 // GET /google/callback
-router.get('/google/callback',passport.authenticate('google'), (req, res)=> {
-    //console.log(req.query.code);
-    // Successful authentication, redirect home.
-    res.redirect('/');
-    }
-);
+router.get("/google/callback", passport.authenticate("google"), (req, res) => {
+  // Successful authentication, redirect home.
+  res.redirect("/");
+});
 
 // GET /facebook/login
 router.get('/facebook/login',passport.authenticate('facebook',{scope:['public_profile', 'email']})

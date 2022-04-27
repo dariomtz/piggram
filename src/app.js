@@ -3,10 +3,16 @@ const path = require('path');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express'); 
 
+const authRoute = require('./routes/auth.route'); 
+const followRoute = require('./routes/follow.route');
+const likeRoute = require('./routes/like.route');
+
 require('dotenv').config();
 require('./config/passport');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+
+const {NotFoundError,InvalidInputError} = require('./utils/errors');
 
 //Swagger
 const swaggerSetup = YAML.load('./src/docs/swagger.yaml');
@@ -14,6 +20,8 @@ const swaggerSetup = YAML.load('./src/docs/swagger.yaml');
 const app = express();
 
 app.use(express.json());
+
+
 
 //MongoDB (mongoose)
 require('./config/db');
@@ -35,14 +43,23 @@ app.use(passport.session());
 //Swagger 
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 
+app.use('/auth', authRoute);
+app.use('/follows',followRoute);
+app.use('/likes',likeRoute);
+
+
 app.use((err, req, res, next) => {
-  //TODO: Make this works
-  console.log('aquiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+  //console.log(err.details);
+  console.log(err);
   if (err.details) return res.status(400).send(err.details[0].message);
   if (err instanceof NotFoundError) {
     return res.status(404).send(err.message);
   }
+  if (err instanceof InvalidInputError){
+    return res.status(400).send(err.message);
+  }
   res.status(503).send('Oooops something went wrong, try again');
 });
+
 
 module.exports = app;
