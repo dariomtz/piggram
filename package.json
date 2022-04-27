@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "test": "jasmine --config=jasmine.json",
+    "test:coverage": "istanbul cover --include-all-sources node_modules/jasmine/bin/jasmine.js -- --config=jasmine.json",
+    "test:integration": "jasmine --config=integration.json"
   },
   "repository": {
     "type": "git",
@@ -32,6 +35,8 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "jasmine": "^4.1.0",
+    "nodemon": "^2.0.15",
+    "proxyquire": "^2.1.3"
   }
 }

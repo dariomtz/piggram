@@ -8,7 +8,6 @@ passport.serializeUser(function (user, done) {
     });
 
 passport.deserializeUser(function (id, done) {
-    //TODO: Replace local for MongoDB implementation
     User.findByPassportId(id)
     .then(user => done(null, user))
     .catch(err => done(err));
@@ -24,7 +23,6 @@ new GoogleStrategy(
     callbackURL: 'http://localhost:3000/auth/google/callback',
     },
     function (accessToken, refreshToken, profile, done) {
-        //console.log(profile);
         User.findByPassportId(profile.id)
         .then((user)=>{
             done(null,user);
@@ -32,7 +30,6 @@ new GoogleStrategy(
         .catch((err)=>{
             User.create({
                 passportID: profile.id,
-                //username: 'tempUsername',//TODO: Find how to change the username
                 email: profile.emails[0].value,
                 name:  profile.displayName,
                 description: "Hey I'm using piggram",
@@ -53,7 +50,6 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'picture', 'email','birthday']
   },
   function(accessToken, refreshToken, profile, done) {
-    //console.log(profile);
     User.findByPassportId(profile.id)
     .then((user)=>{
         done(null,user);
@@ -61,7 +57,6 @@ passport.use(new FacebookStrategy({
     .catch((err)=>{
         User.create({
             passportID: profile.id,
-            //username: 'tempUsername',
             name:  profile.displayName,
             description: 'Hey Im using piggram',
             email: profile.emails[0].value,            

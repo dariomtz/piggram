@@ -5,7 +5,7 @@ function handleError(fn) {
     try {
       fn(req, res, next);
     } catch (err) {
-      console.log('Something went wrong', err);
+      console.log('Something went wrong');
       next(err);
     } 
   }
@@ -16,7 +16,7 @@ function handleErrorAsync(fn) {
     try {
       await fn(req, res, next);
     } catch (err) {
-      //console.log('Something went wrong', err);
+      console.log('Something went wrong');
       next(err);
     } 
   }
