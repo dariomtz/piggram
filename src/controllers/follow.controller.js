@@ -1,7 +1,7 @@
 const FollowModel = require("../models/schemas/follow");
 const mongoose = require('mongoose');
 const User = require("./user.controller");
-const {NotFoundError,InvalidInputError} = require('../utils/errors');
+const {InvalidInputError} = require('../utils/errors');
 
 class Follow {
     
@@ -49,35 +49,30 @@ class Follow {
 
     async add(follower, followee){
         if(follower === followee){
-            return Promise.reject(new Error(`A user can't follow himself`));
+            return Promise.reject(new InvalidInputError(`A user can't follow himself`));
         }
         if(!(await User.exist(follower))){
-            return Promise.reject(new Error(`Follower user doesn't exist`));
+            return Promise.reject(new InvalidInputError(`Follower user doesn't exist`));
         }
         if(!(await User.exist(followee))){
-            return Promise.reject(new Error(`Followee user doesn't exist`));
+            return Promise.reject(new InvalidInputError(`Followee user doesn't exist`));
         } 
         if(await this.exist(follower, followee)){
             return Promise.reject(new Error(`Already Following user`));
         }
         let follow = new FollowModel({follower, followee});
-        try{
-            return await follow.save();
-        }
-        catch(err){
-            return Promise.reject(new Error(`Unable to add follow from user ${follower} to user ${followee}`));
-        }
+        return await follow.save();
     }
 
     async remove(follower, followee){
         if(!(await User.exist(follower))){
-            return Promise.reject(new Error(`Follower user doesn't exist`));
+            return Promise.reject(new InvalidInputError(`Follower user doesn't exist`));
         }
         if(!(await User.exist(followee))){
-            return Promise.reject(new Error(`Followee user doesn't exist`));
+            return Promise.reject(new InvalidInputError(`Followee user doesn't exist`));
         } 
-        let res = await FollowModel.deleteOne({follower,followee});
-        return;
+        await FollowModel.deleteOne({follower,followee});
+        return null;
     }
 }
 

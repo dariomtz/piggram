@@ -1,10 +1,8 @@
 {
   "spec_files": [
-    "**/*test.?(m)js",
-    "!node_modules/**/*",
-    "!tests/integration/**/*"
+    "**/*test.?(m)js"
   ],
-  "spec_dir": "",
+  "spec_dir": "tests/unit",
   "env": {
     "failSpecWithNoExpectations": false,
     "stopSpecOnExpectationFailure": false,
