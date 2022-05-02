@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  id: {
-    //Usar shortid en las rutas para que crear un id aleatorio y no repetido
-    //shortid.generate()
+  passportID:{
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   username: {
     type: String,
@@ -29,7 +27,6 @@ const userSchema = new mongoose.Schema({
   password: {//Usar bcryptjs en caso de que no haga log con google
     //Usar en la rutas para incriptar y desincrptar
     type: String,
-    required: true,
     min: 6,
     max: 20,
   },
@@ -50,10 +47,9 @@ const userSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    required: true,
   },
 });
 
-const User = mongoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
 
-module.exports = User;
+module.exports = UserModel;

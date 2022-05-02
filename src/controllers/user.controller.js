@@ -1,50 +1,44 @@
-const {getJSON, saveJSON} = require('../utils/fileHelpers');
-const User = require('../models/schemas/user')
+const UserModel = require("../models/schemas/user");
+const mongoose = require("mongoose");
+const axios = require("axios").default;
 
-const User = {
-    //TODO: Replace local implementation with mongodb version.
-  // constructor() {
-  //   this.saveData = saveJSON;
-  //   this.fetchData = getJSON;
-  // }
-
-  list: function (){
-    return await User.find({});
-  },
-  getById: function (id) {
-      return User.findbyID(id);
-    },
-  // get: function (username){
-  //   return User.findOne({username})
-  // },
-  
-
-  create: function(username, email, password, name, description, image, createdAt, dateOfBirth) {
-    // fetch the users
-    const user = await User.create({username, email, password, name, description, image, createdAt, dateOfBirth})
-    // append the user to all the users
-    // save the users
-    // user.save();
-    // return the saved user
-    return user;
-  },
-
-  update: function (id, propertiesToUpdate){
-    const user = await User.findOneAndUpdate({username}, propertiesToUpdate, {new:true});
-  if (!user) {
-      return Promise.reject(new NotFoundError(`user with the username: ${username}`));
+class User {
+  async findByPassportId(id) {
+    let doc = await UserModel.findOne({ passportID: id }).lean();
+    if (doc === null) {
+      return Promise.reject(new Error(`User with id ${id} not found`));
     }
-    // else return Promise.reject throw new NotFoundError(`user with the username: ${username}`)
-    return user;
-  },
-  delete: function (id){
-    const user = await User.findOneAndDelete({ id: id});
-    if (user){
-      return user
+    return doc;
   }
-  return Promise.reject(new NotFoundError(`user with the username: ${username}`));
+
+  async create(userData) {
+    if (userData["username"] === undefined) {
+      userData["username"] = (
+        await axios({
+          method: "get",
+          url: "https://randomuser.me/api/?inc=login",
+        })
+      ).data["results"][0]["login"]["username"];
+      console.log(userData["username"]);
+    }
+    var user = new UserModel(userData);
+    let doc;
+    try {
+      doc = await user.save();
+    } catch (err) {
+      return Promise.reject(new Error(`Unable to create the user`));
+    }
+    console.log("create", doc);
+    return doc;
+  }
+
+  async exist(id) {
+    if (!mongoose.isValidObjectId(id)) {
+      return false;
+    }
+    let doc = await UserModel.findById(id);
+    return doc !== null;
+  }
 }
-  
-};
 
 module.exports = new User();
