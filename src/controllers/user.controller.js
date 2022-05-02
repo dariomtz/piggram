@@ -1,36 +1,50 @@
 const {getJSON, saveJSON} = require('../utils/fileHelpers');
+const User = require('../models/schemas/user')
 
-class User {
+const User = {
     //TODO: Replace local implementation with mongodb version.
-  constructor() {
-    this.saveData = saveJSON;
-    this.fetchData = getJSON;
-  }
+  // constructor() {
+  //   this.saveData = saveJSON;
+  //   this.fetchData = getJSON;
+  // }
 
-  async find(id) {
+  list: function (){
+    return await User.find({});
+  },
+  getById: function (id) {
+      return User.findbyID(id);
+    },
+  // get: function (username){
+  //   return User.findOne({username})
+  // },
+  
+
+  create: function(username, email, password, name, description, image, createdAt, dateOfBirth) {
     // fetch the users
-    let users = getJSON();
-    // found the users
-    let ind = users.findIndex(user => user.googleId === id);
-    if(ind !== -1){
-      //   if found return the user
-      return users[ind];
-    }
-    //   if not found return Promise.reject(new Error(`User with id ${id} not found`));
-    return Promise.reject(new Error(`User with id ${id} not found`));
-
-  }
-
-  async create(user) {
-    // fetch the users
-    let users = getJSON();
+    const user = await User.create({username, email, password, name, description, image, createdAt, dateOfBirth})
     // append the user to all the users
-    users.push(user);
     // save the users
-    saveJSON(users);
+    // user.save();
     // return the saved user
     return user;
+  },
+
+  update: function (id, propertiesToUpdate){
+    const user = await User.findOneAndUpdate({username}, propertiesToUpdate, {new:true});
+  if (!user) {
+      return Promise.reject(new NotFoundError(`user with the username: ${username}`));
+    }
+    // else return Promise.reject throw new NotFoundError(`user with the username: ${username}`)
+    return user;
+  },
+  delete: function (id){
+    const user = await User.findOneAndDelete({ id: id});
+    if (user){
+      return user
   }
+  return Promise.reject(new NotFoundError(`user with the username: ${username}`));
+}
+  
 };
 
 module.exports = new User();
