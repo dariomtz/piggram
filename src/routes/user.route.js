@@ -15,6 +15,9 @@ router.post('/logout',(req, res)=>{
 router.get('/user/:id',(req, res)=>{
 
 })
+router.get('/', (req, res)=>{
+    
+})
 router.put('/user/:id',(req, res)=>{
 
 })
