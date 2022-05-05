@@ -1,6 +1,7 @@
 const UserModel = require("../models/schemas/user");
 const mongoose = require("mongoose");
 const axios = require("axios").default;
+const {InvalidInputError} = require('../utils/errors');
 
 class User {
   async findByPassportId(id) {
@@ -11,66 +12,71 @@ class User {
     return doc;
   }
 
-  // async create(userData) {
-  //   if (userData["username"] === undefined) {
-  //     userData["username"] = (
-  //       await axios({
-  //         method: "get",
-  //         url: "https://randomuser.me/api/?inc=login",
-  //       })
-  //     ).data["results"][0]["login"]["username"];
-  //     console.log(userData["username"]);
-  //   }
-  //   var user = new UserModel(userData);
-  //   let doc;
-  //   try {
-  //     doc = await user.save();
-  //   } catch (err) {
-  //     return Promise.reject(new Error(`Unable to create the user`));
-  //   }
-  //   console.log("create", doc);
-  //   return doc;
-  // }
+  async create(userData) {
+    if (userData["username"] === undefined) {
+      userData["username"] = (
+        await axios({
+          method: "get",
+          url: "https://randomuser.me/api/?inc=login",
+        })
+      ).data["results"][0]["login"]["username"];
+      console.log(userData["username"]);
+    }
+    var user = new UserModel(userData);
+    let doc;
+    try {
+      doc = await user.save();
+    } catch (err) {
+      return Promise.reject(new Error(`Unable to create the user`));
+    }
+    console.log("create", doc);
+    return doc;
+  }
   async list() {
-    return await User.find({});
+    return await UserModel.find({});
   }
 
   async getById(id) {
-    return User.findbyID(id);
-  }
-  // get: function (username){
-  //   return User.findOne({username})
-  // },
+    if (!mongoose.isValidObjectId(id)) {
+      return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    }
+    let doc = await UserModel.findById(id);
 
-  async create(
-    passportID,
-    username,
-    email,
-    password,
-    name,
-    description,
-    image,
-    createdAt,
-    dateOfBirth
-  ) {
-    // fetch the users
-    const user = await User.create({
-      passportID,
-      username,
-      email,
-      password,
-      name,
-      description,
-      image,
-      createdAt,
-      dateOfBirth,
-    });
-    // append the user to all the users
-    // save the users
-    // user.save();
-    // return the saved user
-    return user;
+    return doc;
   }
+  async getUser(email){
+    return User.findOne({email}).exec()
+  }
+
+  // async create(
+  //   passportID,
+  //   username,
+  //   email,
+  //   password,
+  //   name,
+  //   description,
+  //   image,
+  //   createdAt,
+  //   dateOfBirth
+  // ) {
+  //   // fetch the users
+  //   const user = await User.create({
+  //     passportID,
+  //     username,
+  //     email,
+  //     password,
+  //     name,
+  //     description,
+  //     image,
+  //     createdAt,
+  //     dateOfBirth,
+  //   });
+  //   // append the user to all the users
+  //   // save the users
+  //   // user.save();
+  //   // return the saved user
+  //   return user;
+  // }
 
   async update(id, propertiesToUpdate) {
     const user = await User.findOneAndUpdate({ id }, propertiesToUpdate, {

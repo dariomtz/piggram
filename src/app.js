@@ -6,6 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const authRoute = require('./routes/auth.route'); 
 const followRoute = require('./routes/follow.route');
 const likeRoute = require('./routes/like.route');
+const userRoute = require('./routes/user.route');
 
 require('dotenv').config();
 require('./config/passport');
@@ -46,6 +47,7 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 app.use('/auth', authRoute);
 app.use('/follows',followRoute);
 app.use('/likes',likeRoute);
+app.user('/user',userRoute);
 
 
 app.use((err, req, res, next) => {
