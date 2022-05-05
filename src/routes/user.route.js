@@ -30,7 +30,7 @@ router.post('/signup',handleErrorAsync,(req, res)=>{
         req.body.password = bcryptjs.hashSync(password, 8);
         req.body.createdAt = moment().format('DD/MM/YYYY');
 
-        let doc = await userController.create(req.body)
+        let doc = userController.create(req.body)
         console.log(doc);
         if (doc && !doc.error) {
             res.status(201).send(doc)
@@ -48,7 +48,7 @@ router.post('/login',handleErrorAsync,(req, res)=>{
     console.log("Login");
     console.log(req.body.password);
     //buscar alumno con ese correo
-    let user = await userController.getUser(req.body.email)
+    let user = userController.getUser(req.body.email)
     if (user) {
         
         //comparar el password con el hash de la base de datos
@@ -79,19 +79,19 @@ router.get('/', (req, res)=>{
 })
 router.get('/:id',handleErrorAsync,(req, res)=>{
     const {id} = req.params;
-    const user = await userController.getById(id)
+    const user = userController.getById(id)
     res.send(user)
 
 })
 router.put('/:id',handleErrorAsync,(req, res)=>{
     const {id} = req.params;
-    const user = await userController.update(id, req.body)
+    const user = userController.update(id, req.body)
     res.send(user)
 
 })
 router.delete('/:id',handleErrorAsync,(req, res)=>{
     const {id} = req.params;
-    await userController.delete(id);
+    userController.delete(id);
     res.status(204).send();
 })
 
