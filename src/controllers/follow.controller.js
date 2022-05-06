@@ -1,7 +1,7 @@
 const FollowModel = require("../models/schemas/follow");
 const mongoose = require('mongoose');
 const User = require("./user.controller");
-const {InvalidInputError} = require('../utils/errors');
+const {NotFoundError,InvalidInputError} = require('../utils/errors');
 
 class Follow {
     
@@ -52,10 +52,10 @@ class Follow {
             return Promise.reject(new InvalidInputError(`A user can't follow himself`));
         }
         if(!(await User.exist(follower))){
-            return Promise.reject(new InvalidInputError(`Follower user doesn't exist`));
+            return Promise.reject(new NotFoundError(`Follower user doesn't exist`));
         }
         if(!(await User.exist(followee))){
-            return Promise.reject(new InvalidInputError(`Followee user doesn't exist`));
+            return Promise.reject(new NotFoundError(`Followee user doesn't exist`));
         } 
         if(await this.exist(follower, followee)){
             return Promise.reject(new Error(`Already Following user`));
@@ -66,10 +66,10 @@ class Follow {
 
     async remove(follower, followee){
         if(!(await User.exist(follower))){
-            return Promise.reject(new InvalidInputError(`Follower user doesn't exist`));
+            return Promise.reject(new NotFoundError(`Follower user doesn't exist`));
         }
         if(!(await User.exist(followee))){
-            return Promise.reject(new InvalidInputError(`Followee user doesn't exist`));
+            return Promise.reject(new NotFoundError(`Followee user doesn't exist`));
         } 
         await FollowModel.deleteOne({follower,followee});
         return null;
