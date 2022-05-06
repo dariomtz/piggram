@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express'); 
+const cors = require('cors');
 
 const authRoute = require('./routes/auth.route'); 
 const followRoute = require('./routes/follow.route');
@@ -20,6 +21,7 @@ const swaggerSetup = YAML.load('./src/docs/swagger.yaml');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 
@@ -47,7 +49,7 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 app.use('/auth', authRoute);
 app.use('/follows',followRoute);
 app.use('/likes',likeRoute);
-app.user('/user',userRoute);
+app.use('/user',userRoute);
 
 
 app.use((err, req, res, next) => {
