@@ -1,14 +1,15 @@
 const proxyquire = require('proxyquire');
 
-const FollowMock = require('../mocks/follow.model.mock');
+const ModelMock = require('../mocks/model.mock');
 const MongooseMock = require("../mocks/mongoose.mock");
-const UserControllerMock = require("../mocks/user.controller.mock");
+const ControllerMock = require("../mocks/controller.mock");
 
+const userControllerMock = new ControllerMock();
 const {NotFoundError,InvalidInputError} = require('../../../src/utils/errors');
 const Follow = proxyquire("../../../src/controllers/follow.controller", {
-    "../models/schemas/follow":FollowMock,
+    "../models/schemas/follow":ModelMock,
     "mongoose":MongooseMock,
-    "./user.controller":UserControllerMock
+    "./user.controller":userControllerMock
 });
 
 describe('followController',()=>{
@@ -20,7 +21,7 @@ describe('followController',()=>{
                 {_id:1,follower:{'username':'b','name':'b','description':'b','image':'b'}},
                 {_id:2,follower:{'username':'c','name':'c','description':'c','image':'c'}}];
 
-            FollowMock.ans =_doc
+            ModelMock.ans =_doc
             MongooseMock.ans = true;
             //Act
             const followers = await Follow.getFollowers(0);
@@ -34,7 +35,7 @@ describe('followController',()=>{
 
         it('Return empty list', async ()=>{
             //Arrange
-            FollowMock.ans = null;
+            ModelMock.ans = null;
             MongooseMock.ans = true;
 
             //Act
@@ -47,7 +48,7 @@ describe('followController',()=>{
 
         it("To be rejected with invalid id",async()=>{
             //Arrange
-            FollowMock.ans = null;
+            ModelMock.ans = null;
             MongooseMock.ans = false;
 
             //Act
@@ -58,7 +59,7 @@ describe('followController',()=>{
 
         it("To throw an InvalidInputError with invalid id",async()=>{
             //Arrange
-            FollowMock.ans = null;
+            ModelMock.ans = null;
             MongooseMock.ans = false;
 
             //Act
@@ -77,7 +78,7 @@ describe('followController',()=>{
                 {_id:1,followee:{'username':'b','name':'b','description':'b','image':'b'}},
                 {_id:2,followee:{'username':'c','name':'c','description':'c','image':'c'}}];
 
-            FollowMock.ans =_doc
+            ModelMock.ans =_doc
             MongooseMock.ans = true;
             //Act
             const ans = await Follow.getFollowing(0);
@@ -91,7 +92,7 @@ describe('followController',()=>{
 
         it('Return empty list', async ()=>{
             //Arrange
-            FollowMock.ans = null;
+            ModelMock.ans = null;
             MongooseMock.ans = true;
 
             //Act
@@ -104,7 +105,7 @@ describe('followController',()=>{
 
         it("To be rejected with invalid id",async()=>{
             //Arrange
-            FollowMock.ans = null;
+            ModelMock.ans = null;
             MongooseMock.ans = false;
 
             //Act
@@ -115,7 +116,7 @@ describe('followController',()=>{
 
         it("To throw an InvalidInputError with invalid id",async()=>{
             //Arrange
-            FollowMock.ans = null;
+            ModelMock.ans = null;
             MongooseMock.ans = false;
 
             //Act
@@ -133,7 +134,7 @@ describe('followController',()=>{
                 followee:{username:"a",name:"a",description:"a",image:"a"},
                 followee:{username:"b",name:"b",description:"b",image:"b"}
             }
-            FollowMock.ans = _doc;
+            ModelMock.ans = _doc;
             MongooseMock.ans = true;
 
             //Act
@@ -147,7 +148,7 @@ describe('followController',()=>{
         it("Return an empty follow", async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = _doc;
+            ModelMock.ans = _doc;
             MongooseMock.ans = true;
 
             //Act
@@ -159,7 +160,7 @@ describe('followController',()=>{
         it("Reject a Promise for invalid follower id", async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = _doc;
+            ModelMock.ans = _doc;
             MongooseMock.ans =[false,true];
             MongooseMock.pos = 0;
 
@@ -172,7 +173,7 @@ describe('followController',()=>{
         it("Throw an InvalidInputErro for invaild follower id", async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = _doc;
+            ModelMock.ans = _doc;
             MongooseMock.ans =[false,true];
             MongooseMock.pos = 0;
 
@@ -188,7 +189,7 @@ describe('followController',()=>{
         it("Reject a Promise for invalid follower id", async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = _doc;
+            ModelMock.ans = _doc;
             MongooseMock.ans =[true,false];
             MongooseMock.pos = 0;
 
@@ -201,7 +202,7 @@ describe('followController',()=>{
         it("Throw an InvalidInputErro for invaild follower id", async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = _doc;
+            ModelMock.ans = _doc;
             MongooseMock.ans =[true,false];
             MongooseMock.pos = 0;
 
@@ -219,8 +220,8 @@ describe('followController',()=>{
         it("Return true when exist",async()=>{
             //Arrange
             const _doc = {}
-            FollowMock.ans = _doc;
-            FollowMock.populates = false;
+            ModelMock.ans = _doc;
+            ModelMock.populates = false;
 
             //Act
             const ans = await Follow.exist(0,1);
@@ -231,8 +232,8 @@ describe('followController',()=>{
         it("Return false when doesnt exist",async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = _doc;
-            FollowMock.populates = false;
+            ModelMock.ans = _doc;
+            ModelMock.populates = false;
 
             //Act
             const ans = await Follow.exist(0,1);
@@ -245,11 +246,11 @@ describe('followController',()=>{
         it("Returns a new follow when created",async()=>{
             //Arrange
             const _doc = {followedAt: 231231,follower:0,followee:1}
-            FollowMock.ans = null;
-            FollowMock.populates = false;
-            FollowMock.saveAns = _doc;
-            UserControllerMock.ans.exist = [true,true];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = null;
+            ModelMock.populates = false;
+            ModelMock.saveAns = _doc;
+            userControllerMock.ans.exist = [true,true];
+            userControllerMock.indx.exist = 0;
 
             //Act
             const ans = await Follow.add(0,1);
@@ -260,11 +261,11 @@ describe('followController',()=>{
         it("Throws an input Error when follower and followee are the same",async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = null;
-            FollowMock.populates = false;
-            FollowMock.saveAns = _doc;
-            UserControllerMock.ans.exist = [true,true];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = null;
+            ModelMock.populates = false;
+            ModelMock.saveAns = _doc;
+            userControllerMock.ans.exist = [true,true];
+            userControllerMock.indx.exist = 0;
 
             //Act
             Follow.add(0,0).then(()=>{
@@ -277,40 +278,40 @@ describe('followController',()=>{
             
         })
 
-        it("Throws an input Error when follower doesnt exist",async()=>{
+        it("Throws a NotFoundError when follower doesnt exist",async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = null;
-            FollowMock.populates = false;
-            FollowMock.saveAns = _doc;
-            UserControllerMock.ans.exist = [false,true];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = null;
+            ModelMock.populates = false;
+            ModelMock.saveAns = _doc;
+            userControllerMock.ans.exist = [false,true];
+            userControllerMock.indx.exist = 0;
 
             //Act
             Follow.add(0,1).then(()=>{
                 expect(false).toBeTrue();
             },(err)=>{
                 //Assert
-                expect(err).toEqual(new InvalidInputError(`Follower user doesn't exist`))
+                expect(err).toEqual(new NotFoundError(`Follower user doesn't exist`))
             })
 
             
         })
-        it("Throws an input Error when followee doesnt exist",async()=>{
+        it("Throws a NotFoundError when followee doesnt exist",async()=>{
             //Arrange
             const _doc = null;
-            FollowMock.ans = null;
-            FollowMock.populates = false;
-            FollowMock.saveAns = _doc;
-            UserControllerMock.ans.exist = [true,false];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = null;
+            ModelMock.populates = false;
+            ModelMock.saveAns = _doc;
+            userControllerMock.ans.exist = [true,false];
+            userControllerMock.indx.exist = 0;
 
             //Act
             Follow.add(0,1).then(()=>{
                 expect(false).toBeTrue();
             },(err)=>{
                 //Assert
-                expect(err).toEqual(new InvalidInputError(`Followee user doesn't exist`))
+                expect(err).toEqual(new NotFoundError(`Followee user doesn't exist`))
             })
 
             
@@ -318,11 +319,11 @@ describe('followController',()=>{
 
         it("Throws an input Error when follow already exist",async()=>{
             //Arrange
-            FollowMock.ans = {followedAt: 231231,follower:0,followee:1};
-            FollowMock.populates = false;
-            FollowMock.saveAns = null;
-            UserControllerMock.ans.exist = [true,true];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = {followedAt: 231231,follower:0,followee:1};
+            ModelMock.populates = false;
+            ModelMock.saveAns = null;
+            userControllerMock.ans.exist = [true,true];
+            userControllerMock.indx.exist = 0;
 
             //Act
             Follow.add(0,1).then(()=>{
@@ -338,9 +339,9 @@ describe('followController',()=>{
     describe("remove",()=>{
         it("Return null when follow is removed",async()=>{
             //Arrange
-            FollowMock.ans = null;
-            UserControllerMock.ans.exist = [true,true];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = null;
+            userControllerMock.ans.exist = [true,true];
+            userControllerMock.indx.exist = 0;
 
             //Act
             const ans = await Follow.remove(0,1);
@@ -350,33 +351,33 @@ describe('followController',()=>{
 
         })
 
-        it("Throw InvalidInputError when follower doesnt exist",async()=>{
+        it("Throw NotFoundError when follower doesnt exist",async()=>{
             //Arrange
-            FollowMock.ans = null;
-            UserControllerMock.ans.exist = [false,true];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = null;
+            userControllerMock.ans.exist = [false,true];
+            userControllerMock.indx.exist = 0;
 
             //Act
             Follow.remove(0,1).then(()=>{
                 expect(false).toBeTrue();
             },(err)=>{
                 //Assert
-                expect(err).toEqual(new InvalidInputError(`Follower user doesn't exist`));
+                expect(err).toEqual(new NotFoundError(`Follower user doesn't exist`));
             })
 
         })
-        it("Throw InvalidInputError when followee doesnt exist",async()=>{
+        it("Throw NotFoundError when followee doesn't exist",async()=>{
             //Arrange
-            FollowMock.ans = null;
-            UserControllerMock.ans.exist = [true,false];
-            UserControllerMock.indx.exist = 0;
+            ModelMock.ans = null;
+            userControllerMock.ans.exist = [true,false];
+            userControllerMock.indx.exist = 0;
 
             //Act
             Follow.remove(0,1).then(()=>{
                 expect(false).toBeTrue();
             },(err)=>{
                 //Assert
-                expect(err).toEqual(new InvalidInputError(`Followee user doesn't exist`));
+                expect(err).toEqual(new NotFoundError(`Followee user doesn't exist`));
             })
 
         })
