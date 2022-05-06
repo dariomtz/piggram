@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema({
   dateOfBirth: {
     type: Date,
   },
+  resgitrationCompleted:{
+    type: Boolean,
+    default: ()=>false,
+  }
 });
 
 const UserModel = mongoose.model("User", userSchema);
