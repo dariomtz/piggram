@@ -49,7 +49,7 @@ class User {
   }
 
   async update(id, propertiesToUpdate) {
-    const user = await UserModel.findOneAndUpdate({ id }, propertiesToUpdate, {
+    const user = await UserModel.findOneAndUpdate({ _id: id }, propertiesToUpdate, {
       new: true,
     });
     if (!user) {
@@ -59,9 +59,9 @@ class User {
     return user;
   }
   async delete(id) {
-    const user = await UserModel.findOneAndDelete({ id: id });
+    const user = await UserModel.findOneAndRemove({ _id: id });
     if (user) {
-      return user;
+      return null;
     }
     return Promise.reject(new NotFoundError(`user with the id: ${id}`));
   }
@@ -92,15 +92,14 @@ class User {
   }
 
   async findUserByUsername(username) {
-  
-    const result = await UserModel.find({ username: {$regex: username} });
+    const result = await UserModel.find({ username: { $regex: username } });
     if (result === null) {
       return [];
     }
     return result;
   }
   async findUserByName(name) {
-    const result = await UserModel.find({ name: {$regex: name} });
+    const result = await UserModel.find({ name: { $regex: name } });
     if (result === null) {
       return [];
     }
