@@ -17,6 +17,11 @@ router.post(
   }
 );
 
+router.get('/:username',isAuthenticated, (req, res) => {
+  const { username } = req.params;
+  res.send({ url: userController.findUsers(username) });
+});
+
 router.get("/:id/getProfilePicture", isAuthenticated, (req, res) => {
   const { id } = req.params;
   res.send({ url: userController.getProfilePicture(id) });
@@ -25,16 +30,19 @@ router.get("/:id/getProfilePicture", isAuthenticated, (req, res) => {
 router.get("/", (req, res) => {
   res.send({ user: userController.list() });
 });
+
 router.get("/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const user = userController.getById(id);
   res.send(user);
 });
+
 router.put("/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const user = userController.update(id, req.body);
   res.send(user);
 });
+
 router.delete("/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   userController.delete(id);
