@@ -1,7 +1,7 @@
 const UserModel = require("../models/schemas/user");
 const mongoose = require("mongoose");
 const axios = require("axios").default;
-const {InvalidInputError} = require('../utils/errors');
+const { InvalidInputError } = require("../utils/errors");
 
 class User {
   async findByPassportId(id) {
@@ -37,46 +37,17 @@ class User {
   }
 
   async getById(id) {
-    if (!mongoose.isValidObjectId(id)) {
-      return Promise.reject(new InvalidInputError(`Invalid user ID`));
-    }
+    // if (!mongoose.isValidObjectId(id)) {
+    //   return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    // }
+    console.log("buscando por ID");
     let doc = await UserModel.findById(id);
 
     return doc;
   }
-  async getUser(email){
-    return User.findOne({email}).exec()
+  async getUser(email) {
+    return await User.findOne({ email }).exec();
   }
-
-  // async create(
-  //   passportID,
-  //   username,
-  //   email,
-  //   password,
-  //   name,
-  //   description,
-  //   image,
-  //   createdAt,
-  //   dateOfBirth
-  // ) {
-  //   // fetch the users
-  //   const user = await User.create({
-  //     passportID,
-  //     username,
-  //     email,
-  //     password,
-  //     name,
-  //     description,
-  //     image,
-  //     createdAt,
-  //     dateOfBirth,
-  //   });
-  //   // append the user to all the users
-  //   // save the users
-  //   // user.save();
-  //   // return the saved user
-  //   return user;
-  // }
 
   async update(id, propertiesToUpdate) {
     const user = await User.findOneAndUpdate({ id }, propertiesToUpdate, {
@@ -95,13 +66,45 @@ class User {
     }
     return Promise.reject(new NotFoundError(`user with the id: ${id}`));
   }
-  
+
   async exist(id) {
     if (!mongoose.isValidObjectId(id)) {
       return false;
     }
     let doc = await UserModel.findById(id);
     return doc !== null;
+  }
+
+  async saveProfilePicture(id, url) {
+    if (!mongoose.isValidObjectId(id)) {
+      return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    }
+    let user = await UserModel.findById(id);
+    user.image = url;
+    await user.save();
+  }
+
+  async getProfilePicture(id) {
+    if (!mongoose.isValidObjectId(id)) {
+      return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    }
+    const data = await UserModel.findById(id);
+    return data.image || "";
+  }
+
+  async findUserByUsername(username) {
+    const result = await UserModel.find({ username: {$regex: username} });
+    if (result === null) {
+      return [];
+    }
+    return result;
+  }
+  async findUserByName(name) {
+    const result = await UserModel.find({ name: {$regex: name} });
+    if (result === null) {
+      return [];
+    }
+    return result;
   }
 }
 

@@ -18,4 +18,23 @@ class Post {
         let doc = await PostModel.findById(id);
         return doc !== null;
     }
+
+    async savePostPicture(id, url) {
+        if (!mongoose.isValidObjectId(id)) {
+          return Promise.reject(new InvalidInputError(`Invalid user ID`));
+        }
+        let user = await UserModel.findById(id);
+        user.image = url;
+        await user.save(); 
+      }
+    
+      async getPostPicture(id) {
+        if (!mongoose.isValidObjectId(id)) {
+          return Promise.reject(new InvalidInputError(`Invalid user ID`));
+        }
+        const data = await UserModel.findById(id);
+        return data.image || '';
+      }
 }
+
+module.exports = new Post();
