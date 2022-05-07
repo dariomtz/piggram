@@ -1,7 +1,7 @@
 const UserModel = require("../models/schemas/user");
 const mongoose = require("mongoose");
 const axios = require("axios").default;
-const {InvalidInputError} = require('../utils/errors');
+const { InvalidInputError } = require("../utils/errors");
 
 class User {
   async findByPassportId(id) {
@@ -44,8 +44,8 @@ class User {
 
     return doc;
   }
-  async getUser(email){
-    return User.findOne({email}).exec()
+  async getUser(email) {
+    return User.findOne({ email }).exec();
   }
 
   async update(id, propertiesToUpdate) {
@@ -65,7 +65,7 @@ class User {
     }
     return Promise.reject(new NotFoundError(`user with the id: ${id}`));
   }
-  
+
   async exist(id) {
     if (!mongoose.isValidObjectId(id)) {
       return false;
@@ -80,7 +80,7 @@ class User {
     }
     let user = await UserModel.findById(id);
     user.image = url;
-    await user.save(); 
+    await user.save();
   }
 
   async getProfilePicture(id) {
@@ -88,7 +88,23 @@ class User {
       return Promise.reject(new InvalidInputError(`Invalid user ID`));
     }
     const data = await UserModel.findById(id);
-    return data.image || '';
+    return data.image || "";
+  }
+
+  findUsers(name, username) {
+    let result;
+
+    if (typeof name !== "undefined") {
+      result = findOne({ name: name });
+      return result;
+    }
+
+    if (typeof username !== "undefined") {
+      result = findOne({ username: username });
+      return result;
+    }
+
+    return Promise.reject(new InvalidInputError(`Invalid user ID`));
   }
 }
 
