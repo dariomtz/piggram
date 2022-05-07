@@ -17,35 +17,43 @@ router.post(
   }
 );
 
-router.get('/:username',isAuthenticated, (req, res) => {
+router.get('/:username',isAuthenticated, async(req, res) => {
   const { username } = req.params;
-  res.send({ url: userController.findUsers(username) });
-});
+  console.log(username);
+  const user = await userController.findUserByUsername(username);
+  const user2 = await userController.findUserByName(username);
+  const set = new Set(user.username);
+  user2.forEach(element => set.add(element));
 
-router.get("/:id/getProfilePicture", isAuthenticated, (req, res) => {
+  const result = Array.from(set)
+  res.send(result);
+});
+  
+router.get("/:id/getProfilePicture", isAuthenticated,async (req, res) => {
   const { id } = req.params;
-  res.send({ url: userController.getProfilePicture(id) });
+  res.send({ url: await userController.getProfilePicture(id) });
 });
 
-router.get("/", (req, res) => {
-  res.send({ user: userController.list() });
+router.get("/", async(req, res) => {
+  res.send({ user: await userController.list() });
 });
 
-router.get("/:id", isAuthenticated, (req, res) => {
+router.get("/id/:id", isAuthenticated,async (req, res) => {
   const { id } = req.params;
-  const user = userController.getById(id);
+  console.log(id);
+  const user = await userController.getById(id);
   res.send(user);
 });
 
-router.put("/:id", isAuthenticated, (req, res) => {
+router.put("/id/:id", isAuthenticated, async(req, res) => {
   const { id } = req.params;
-  const user = userController.update(id, req.body);
+  const user = await userController.update(id, req.body);
   res.send(user);
 });
 
-router.delete("/:id", isAuthenticated, (req, res) => {
+router.delete("/id/:id", isAuthenticated,async (req, res) => {
   const { id } = req.params;
-  userController.delete(id);
+  await userController.delete(id);
   res.status(204).send();
 });
 

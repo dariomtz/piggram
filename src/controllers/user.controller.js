@@ -37,15 +37,16 @@ class User {
   }
 
   async getById(id) {
-    if (!mongoose.isValidObjectId(id)) {
-      return Promise.reject(new InvalidInputError(`Invalid user ID`));
-    }
+    // if (!mongoose.isValidObjectId(id)) {
+    //   return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    // }
+    console.log("buscando por ID");
     let doc = await UserModel.findById(id);
 
     return doc;
   }
   async getUser(email) {
-    return User.findOne({ email }).exec();
+    return await User.findOne({ email }).exec();
   }
 
   async update(id, propertiesToUpdate) {
@@ -91,20 +92,19 @@ class User {
     return data.image || "";
   }
 
-  findUsers(name, username) {
-    let result;
-
-    if (typeof name !== "undefined") {
-      result = findOne({ name: name });
-      return result;
+  async findUserByUsername(username) {
+    const result = await UserModel.find({ username: {$regex: username} });
+    if (result === null) {
+      return [];
     }
-
-    if (typeof username !== "undefined") {
-      result = findOne({ username: username });
-      return result;
+    return result;
+  }
+  async findUserByName(name) {
+    const result = await UserModel.find({ name: {$regex: name} });
+    if (result === null) {
+      return [];
     }
-
-    return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    return result;
   }
 }
 
