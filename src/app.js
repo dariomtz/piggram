@@ -20,20 +20,6 @@ const {NotFoundError,InvalidInputError} = require('./utils/errors');
 const swaggerSetup = YAML.load('./src/docs/swagger.yaml');
 
 const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-
-
-//MongoDB (mongoose)
-require('./config/db');
-
-//Home page
-app.get('/', (req, res) => {
-    res.send('Hello World!!!');
-  });
-
 //Passport (Auth)
 app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000,
@@ -43,6 +29,19 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+app.use(cors());
+app.use(express.json());
+
+//MongoDB (mongoose)
+require('./config/db');
+
+//Home page
+app.get('/', (req, res) => {
+    res.status(200).send({a:"aqui"});
+  });
+
+
 //Swagger 
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 
@@ -51,10 +50,7 @@ app.use('/follows',followRoute);
 app.use('/likes',likeRoute);
 app.use('/user',userRoute);
 
-
 app.use((err, req, res, next) => {
-  //console.log(err.details);
-  console.log(err);
   if (err.details) return res.status(400).send(err.details[0].message);
   if (err instanceof NotFoundError) {
     return res.status(404).send(err.message);
@@ -65,5 +61,7 @@ app.use((err, req, res, next) => {
   res.status(503).send('Oooops something went wrong, try again');
 });
 
-
+app.listen(80, function () {
+  console.log('CORS-enabled web server listening on port 80')
+})
 module.exports = app;

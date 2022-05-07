@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const userController = require("../controllers/user.controller");
-const { uploadLocal } = require("../utils/multer");
+const { uploadLocal, uploadFirebase } = require("../utils/multer");
 const { isAuthenticated } = require("../midlewares/auth.midleware");
 
 router.use(isAuthenticated);
@@ -13,7 +13,16 @@ router.post(
     console.log(req.file);
     const path = req.file.path.replace("src\\", "");
     console.log(path);
-    userController.saveProfilePicture(`${id},http://localhost:3000/${path}`); // Modificar la url
+    userController.saveProfilePicture(id,`http://localhost:3000/${path}`); // Modificar la url
+  }
+);
+
+router.post(
+  "/profilePicture",
+  uploadFirebase.single("file"),
+  (req, res) => {
+    const {file} = req;
+    userController.saveProfilePicture(req.user._id,file.publicUrl); // Modificar la url
   }
 );
 

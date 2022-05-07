@@ -3,25 +3,21 @@ const path = require("path");
 const passport = require("passport");
 // path: auth/
 
-// GET /login
-router.get("/login", (req, res) => {
-  res.sendFile(path.resolve("src/public/html/login.html"));
-});
-
+// path: auth/
 // GET /verifyLogin
 router.get("/verifyLogin", (req, res) => {
   if (req.user != null) {
-    res.send("Logged In");
+    res.send({"response":"Logged In", "status": 200});
     return;
   }
-  res.status(401).send("Not Authorized");
+  res.status(401).send({"response":"Not Authorized", "status": 401});
 });
 
 // GET /logout
 router.get("/logout", (req, res) => {
   req.logOut();
   req.session = null;
-  res.redirect("/");
+  res.redirect(`${process.env.FRONTEND_URL}/`);
 });
 
 // GET /google/login
@@ -33,7 +29,7 @@ router.get(
 // GET /google/callback
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   // Successful authentication, redirect home.
-  res.redirect("/");
+  res.redirect(`${process.env.FRONTEND_URL}/home`);
 });
 
 // GET /facebook/login
@@ -45,7 +41,7 @@ router.get('/facebook/callback',
     passport.authenticate('facebook',{failureRedirect: '/login', failureMessage: true}),
     (req, res)=> {
     // Successful authentication, redirect home.
-    res.redirect('/');
+    res.redirect(`${process.env.FRONTEND_URL}/home`);
     }
 );
 
