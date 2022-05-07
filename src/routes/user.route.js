@@ -5,15 +5,17 @@ const { isAuthenticated } = require("../midlewares/auth.midleware");
 
 router.use(isAuthenticated);
 
+//path: user/
+
 router.post(
-  "/:id/profilePictureLocal",
-  uploadLocal.single("profilePicture"),
+  "/profilePictureLocal",
+  uploadLocal.single("file"),
   (req, res) => {
-    const { id } = req.params;
     console.log(req.file);
     const path = req.file.path.replace("src\\", "");
     console.log(path);
-    userController.saveProfilePicture(id,`http://localhost:3000/${path}`); // Modificar la url
+    userController.saveProfilePicture(req.user._id,`http://localhost:3000/${path}`); // Modificar la url
+    res.send({status:200,url: `http://localhost:3000/${path}`})
   }
 );
 
@@ -23,6 +25,7 @@ router.post(
   (req, res) => {
     const {file} = req;
     userController.saveProfilePicture(req.user._id,file.publicUrl); // Modificar la url
+    res.send({status:200,url: req.file.publicUrl})
   }
 );
 
