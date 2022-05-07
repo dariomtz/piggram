@@ -27,7 +27,7 @@ const uploadFirebase = multer({
       privateKey: PRIVATE_KEY,
       projectId: PROJECT_ID
     },
-    directoryPath:'/web',
+    directoryPath:'web',
     unique: true,
     public: true
   })
