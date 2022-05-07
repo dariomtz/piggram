@@ -37,20 +37,19 @@ class User {
   }
 
   async getById(id) {
-    // if (!mongoose.isValidObjectId(id)) {
-    //   return Promise.reject(new InvalidInputError(`Invalid user ID`));
-    // }
-    console.log("buscando por ID");
+    if (!mongoose.isValidObjectId(id)) {
+      return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    }
     let doc = await UserModel.findById(id);
 
     return doc;
   }
   async getUser(email) {
-    return await User.findOne({ email }).exec();
+    return await UserModel.findOne({ email });
   }
 
   async update(id, propertiesToUpdate) {
-    const user = await User.findOneAndUpdate({ id }, propertiesToUpdate, {
+    const user = await UserModel.findOneAndUpdate({ id }, propertiesToUpdate, {
       new: true,
     });
     if (!user) {
@@ -60,7 +59,7 @@ class User {
     return user;
   }
   async delete(id) {
-    const user = await User.findOneAndDelete({ id: id });
+    const user = await UserModel.findOneAndDelete({ id: id });
     if (user) {
       return user;
     }
@@ -93,6 +92,7 @@ class User {
   }
 
   async findUserByUsername(username) {
+  
     const result = await UserModel.find({ username: {$regex: username} });
     if (result === null) {
       return [];

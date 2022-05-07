@@ -54,15 +54,13 @@ router.get("/id/:id", isAuthenticated,async (req, res) => {
   res.send(user);
 });
 
-router.put("/id/:id", isAuthenticated, async(req, res) => {
-  const { id } = req.params;
-  const user = await userController.update(id, req.body);
+router.put("/update", isAuthenticated, async(req, res) => {
+  const user = await userController.update(req.user._id, req.body);
   res.send(user);
 });
 
-router.delete("/id/:id", isAuthenticated,async (req, res) => {
-  const { id } = req.params;
-  await userController.delete(id);
+router.delete("/delete", isAuthenticated,async (req, res) => {
+  await userController.delete(req.user._id);
   res.status(204).send();
 });
 
