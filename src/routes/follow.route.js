@@ -11,19 +11,19 @@ router.use(isAuthenticated);
 router.get('/:id/followers', handleErrorAsync(async(req, res)=>{
     let id = req.params.id;
     let followers = await Follow.getFollowers(id);
-    res.send({followers});
+    res.send(followers);
 }));
 
 router.get('/:id/following', handleErrorAsync(async(req, res)=>{
     let id = req.params.id;
     let following = await Follow.getFollowing(id);
-    res.send({following});
+    res.send(following);
 }));
 
 router.post('/:id',handleErrorAsync(async (req,res)=>{
     let followee = req.params.id;
-    let follow = await Follow.add(req.user._id, followee);
-    res.send({follow});
+    let follow = await Follow.add(req.user._id.valueOf(), followee);
+    res.send(follow);
 }) )
 
 router.delete('/:id',handleErrorAsync(async(req,res)=>{
