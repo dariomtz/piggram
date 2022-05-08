@@ -47,7 +47,6 @@ router.get("/id/:id",async (req, res) => {
 });
 
 router.put("/update",isAuthenticated, async(req, res) => {
-  // console.log(req.body);
   const { id } = req.params;
   const user = await userController.update(req.user._id, req.body);
   res.send(user);
