@@ -16,7 +16,7 @@ router.post(
   }
 );
 
-router.get('/:username',isAuthenticated, async(req, res) => {
+router.get('/:username', isAuthenticated,async(req, res) => {
   const { username } = req.params;
   console.log(username);
   const user = await userController.findUserByUsername(username);
@@ -39,22 +39,23 @@ router.get("/", async(req, res) => {
 //  res.send({ user: await userController.list() });
 });
 
-router.get("/id/:id", isAuthenticated,async (req, res) => {
+router.get("/id/:id",async (req, res) => {
   const { id } = req.params;
   console.log(id);
   const user = await userController.getById(id);
   res.send(user);
 });
 
-router.put("/id/:id", isAuthenticated, async(req, res) => {
+router.put("/update/:id",isAuthenticated, async(req, res) => {
+  // console.log(req.body);
   const { id } = req.params;
-  const user = await userController.update(id, req.body);
+  const user = await userController.update(req.user._id, req.body);
   res.send(user);
 });
 
-router.delete("/id/:id", isAuthenticated,async (req, res) => {
+router.delete("/delete/:id",isAuthenticated,async (req, res) => {
   const { id } = req.params;
-  await userController.delete(id);
+  await userController.delete(req.user._id);
   res.status(204).send();
 });
 
