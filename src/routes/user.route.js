@@ -8,9 +8,16 @@ router.use(isAuthenticated);
 //path: user/
 router.post("/", uploadFirebase.single("file"), async (req, res) => {
   const userInput = req.body;
-  user["image"] = req.file.path;
+  user["image"] = req.file.publicUrl;
   const user = await userController.create(user);
   res.status(201).send(user);
+});
+
+//path: user/
+router.post("/profilePicture", uploadFirebase.single("file"), (req, res) => {
+  const { file } = req;
+  userController.saveProfilePicture(req.user._id, file.publicUrl); // Modificar la url
+  res.send({ status: 200, url: req.file.publicUrl });
 });
 
 router.get("/search", isAuthenticated, async (req, res) => {
