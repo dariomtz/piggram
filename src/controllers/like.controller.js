@@ -6,7 +6,7 @@ const { NotFoundError, InvalidInputError } = require("../utils/errors");
 class Like {
   async getByPost(postId) {
     let doc = await LikeModel.find({ postId }, { _id: 0, postId: 0 }).populate(
-      "UserId",
+      "userId",
       ["username", "name", "description", "image"]
     );
     return doc || [];
@@ -21,7 +21,7 @@ class Like {
 
   async find(postId, userId) {
     let doc = await LikeModel.findOne({ userId, postId }, { _id: 0 })
-      .populate("UserId", ["username", "name", "description", "image"])
+      .populate("userId", ["username", "name", "description", "image"])
       .populate("postId");
     return doc || {};
   }

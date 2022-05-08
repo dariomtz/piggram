@@ -1,6 +1,7 @@
 const PostModel = require("../models/schemas/post");
 const mongoose = require("mongoose");
 const { NotFoundError } = require("../utils/errors");
+const userController = require("./user.controller");
 
 class Post {
   async findById(id) {
@@ -48,6 +49,21 @@ class Post {
       return Promise.reject(new NotFoundError(`Post doesn't exist`));
     }
     await PostModel.findByIdAndDelete(id);
+  }
+
+  async getFeed() {
+    return await PostModel.find({}).populate("userId", [
+      "username",
+      "name",
+      "image",
+    ]);
+  }
+
+  async getPostsByUser(id) {
+    if (!userController.exist(id)) {
+      return Promise.reject(new NotFoundError(`User does not exist`));
+    }
+    return await PostModel.find({ userId: id });
   }
 }
 

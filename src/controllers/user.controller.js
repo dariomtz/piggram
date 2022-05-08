@@ -1,7 +1,7 @@
 const UserModel = require("../models/schemas/user");
 const mongoose = require("mongoose");
 const axios = require("axios").default;
-const { InvalidInputError } = require("../utils/errors");
+const { InvalidInputError, NotFoundError } = require("../utils/errors");
 
 class User {
   async findByPassportId(id) {
@@ -37,8 +37,8 @@ class User {
   }
 
   async getById(id) {
-    if (!mongoose.isValidObjectId(id)) {
-      return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    if (!User.exist(id)) {
+      return Promise.reject(new NotFoundError(`Invalid user ID`));
     }
     console.log("buscando por ID");
     let doc = await UserModel.findById(id, {
