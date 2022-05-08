@@ -55,6 +55,15 @@ class User {
     return await UserModel.findOne({ email });
   }
 
+  async saveProfilePicture(id, url) {
+    if (!mongoose.isValidObjectId(id)) {
+      return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    }
+    let user = await UserModel.findById(id);
+    user.image = url;
+    await user.save();
+  }
+
   async update(id, propertiesToUpdate) {
     const user = await UserModel.findOneAndUpdate(
       { _id: id },
