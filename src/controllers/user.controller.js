@@ -41,7 +41,7 @@ class User {
     //   return Promise.reject(new InvalidInputError(`Invalid user ID`));
     // }
     console.log("buscando por ID");
-    let doc = await UserModel.findById(id);
+    let doc = await UserModel.findById(id,{'passportID':0,'createdAt':0,'__v':0,'resgitrationCompleted':0});
 
     return doc;
   }

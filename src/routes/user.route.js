@@ -6,19 +6,6 @@ const { isAuthenticated } = require("../midlewares/auth.midleware");
 router.use(isAuthenticated);
 
 //path: user/
-
-router.post(
-  "/profilePictureLocal",
-  uploadLocal.single("file"),
-  (req, res) => {
-    console.log(req.file);
-    const path = req.file.path.replace("src\\", "");
-    console.log(path);
-    userController.saveProfilePicture(req.user._id,`http://localhost:3000/${path}`); // Modificar la url
-    res.send({status:200,url: `http://localhost:3000/${path}`})
-  }
-);
-
 router.post(
   "/profilePicture",
   uploadFirebase.single("file"),
@@ -47,7 +34,9 @@ router.get("/:id/getProfilePicture", isAuthenticated,async (req, res) => {
 });
 
 router.get("/", async(req, res) => {
-  res.send({ user: await userController.list() });
+  const user = await userController.getById(req.user._id);
+  res.send(user);
+//  res.send({ user: await userController.list() });
 });
 
 router.get("/id/:id", isAuthenticated,async (req, res) => {
