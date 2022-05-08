@@ -48,6 +48,7 @@ class Follow {
     }
 
     async add(follower, followee){
+        console.log(follower, ' ',followee);
         if(follower === followee){
             return Promise.reject(new InvalidInputError(`A user can't follow himself`));
         }

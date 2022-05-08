@@ -105,3 +105,4 @@ dist
 
 src/test.http
 firebase_credentials.json
+src/public/

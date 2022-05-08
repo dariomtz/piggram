@@ -53,6 +53,7 @@ app.use("/user", userRoute);
 app.use("/post", postRoute);
 
 app.use((err, req, res, next) => {
+  console.log('error\n',err.message);
   if (err.details) return res.status(400).send(err.details[0].message);
   if (err instanceof NotFoundError) {
     return res.status(404).send(err.message);

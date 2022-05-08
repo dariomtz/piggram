@@ -40,7 +40,14 @@ class User {
     if (!mongoose.isValidObjectId(id)) {
       return Promise.reject(new InvalidInputError(`Invalid user ID`));
     }
-    let doc = await UserModel.findById(id);
+    console.log("buscando por ID");
+    let doc = await UserModel.findById(id, {
+      passportID: 0,
+      createdAt: 0,
+      __v: 0,
+      resgitrationCompleted: 0,
+      password: 0,
+    });
 
     return doc;
   }
@@ -49,19 +56,22 @@ class User {
   }
 
   async update(id, propertiesToUpdate) {
-    const user = await UserModel.findOneAndUpdate({ _id: id }, propertiesToUpdate, {
-      new: true,
-    });
+    const user = await UserModel.findOneAndUpdate(
+      { _id: id },
+      propertiesToUpdate,
+      {
+        new: true,
+      }
+    );
     if (!user) {
       return Promise.reject(new NotFoundError(`user with the id: ${id}`));
     }
-    // else return Promise.reject throw new NotFoundError(`user with the username: ${username}`)
     return user;
   }
   async delete(id) {
     const user = await UserModel.findOneAndRemove({ _id: id });
     if (user) {
-      return null;
+      return "Borrado";
     }
     return Promise.reject(new NotFoundError(`user with the id: ${id}`));
   }
@@ -72,23 +82,6 @@ class User {
     }
     let doc = await UserModel.findById(id);
     return doc !== null;
-  }
-
-  async saveProfilePicture(id, url) {
-    if (!mongoose.isValidObjectId(id)) {
-      return Promise.reject(new InvalidInputError(`Invalid user ID`));
-    }
-    let user = await UserModel.findById(id);
-    user.image = url;
-    await user.save();
-  }
-
-  async getProfilePicture(id) {
-    if (!mongoose.isValidObjectId(id)) {
-      return Promise.reject(new InvalidInputError(`Invalid user ID`));
-    }
-    const data = await UserModel.findById(id);
-    return data.image || "";
   }
 
   async findUserByUsername(username) {
