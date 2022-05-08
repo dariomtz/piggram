@@ -1,8 +1,15 @@
+require("dotenv").config();
+require("./config/passport");
+require("./config/db");
+
 const express = require("express");
 const path = require("path");
 const YAML = require("yamljs");
 const swaggerUi = require("swagger-ui-express");
-const cors = require("cors");
+const cookieSession = require("cookie-session");
+const passport = require("passport");
+const swaggerSetup = YAML.load("./src/docs/swagger.yaml");
+const { NotFoundError, InvalidInputError } = require("./utils/errors");
 
 const authRoute = require("./routes/auth.route");
 const followRoute = require("./routes/follow.route");
@@ -10,17 +17,20 @@ const likeRoute = require("./routes/like.route");
 const userRoute = require("./routes/user.route");
 const postRoute = require("./routes/post.route");
 
-require("dotenv").config();
-require("./config/passport");
-const cookieSession = require("cookie-session");
-const passport = require("passport");
-
-const { NotFoundError, InvalidInputError } = require("./utils/errors");
-
-//Swagger
-const swaggerSetup = YAML.load("./src/docs/swagger.yaml");
-
 const app = express();
+
+function corsCustom(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+}
+
+app.use(corsCustom);
+
 //Passport (Auth)
 app.use(
   cookieSession({
@@ -32,11 +42,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors());
 app.use(express.json());
-
-//MongoDB (mongoose)
-require("./config/db");
 
 //Home page
 app.get("/", (req, res) => {
@@ -53,7 +59,7 @@ app.use("/user", userRoute);
 app.use("/post", postRoute);
 
 app.use((err, req, res, next) => {
-  console.log('error\n',err.message);
+  console.log("error\n", err.message);
   if (err.details) return res.status(400).send(err.details[0].message);
   if (err instanceof NotFoundError) {
     return res.status(404).send(err.message);
@@ -64,7 +70,4 @@ app.use((err, req, res, next) => {
   res.status(503).send("Oooops something went wrong, try again");
 });
 
-app.listen(80, function () {
-  console.log("CORS-enabled web server listening on port 80");
-});
 module.exports = app;
