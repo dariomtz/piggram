@@ -4,6 +4,9 @@ class ModelUserMock {
   static saveAns = null;
 
   static find(a) {
+    ModelUserMock.ans.filter((element) => {
+      return element.username.includes("happy");
+    });
     return ModelUserMock.ans;
   }
 
@@ -20,7 +23,7 @@ class ModelUserMock {
   static findById(a, b) {
     return ModelUserMock.ans.filter((id) => id._id === a);
   }
-  static findOneAndRemove(a){
+  static findOneAndRemove(a) {
     const index = ModelUserMock.ans.findIndex((id) => id._id === a._id);
     return ModelUserMock.ans.splice(index, 1);
   }
