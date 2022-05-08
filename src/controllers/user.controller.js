@@ -37,7 +37,7 @@ class User {
   }
 
   async getById(id) {
-    if (!User.exist(id)) {
+    if (!(await this.exist(id))) {
       return Promise.reject(new NotFoundError(`Invalid user ID`));
     }
     console.log("buscando por ID");
