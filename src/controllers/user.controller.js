@@ -37,11 +37,11 @@ class User {
   }
 
   async getById(id) {
-    // if (!mongoose.isValidObjectId(id)) {
-    //   return Promise.reject(new InvalidInputError(`Invalid user ID`));
-    // }
+    if (!mongoose.isValidObjectId(id)) {
+      return Promise.reject(new InvalidInputError(`Invalid user ID`));
+    }
     console.log("buscando por ID");
-    let doc = await UserModel.findById(id,{'passportID':0,'createdAt':0,'__v':0,'resgitrationCompleted':0});
+    let doc = await UserModel.findById(id,{'passportID':0,'createdAt':0,'__v':0,'resgitrationCompleted':0, 'password':0});
 
     return doc;
   }
@@ -56,13 +56,12 @@ class User {
     if (!user) {
       return Promise.reject(new NotFoundError(`user with the id: ${id}`));
     }
-    // else return Promise.reject throw new NotFoundError(`user with the username: ${username}`)
     return user;
   }
   async delete(id) {
     const user = await UserModel.findOneAndRemove({ _id: id });
     if (user) {
-      return null;
+      return "Borrado";
     }
     return Promise.reject(new NotFoundError(`user with the id: ${id}`));
   }

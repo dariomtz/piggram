@@ -3,34 +3,26 @@ class ModelUserMock {
   static populates = true;
   static saveAns = null;
 
-  static find() {
-    return this.populates
-      ? {
-          populate: (a, b) => {
-            return { populate: (a, b) => ModelUserMock.ans };
-          },
-        }
-      : ModelUserMock.ans;
+  static find(a) {
+    return ModelUserMock.ans;
   }
 
   static findOne(a) {
-    return this.populates
-      ? {
-          populate: (a, b) => {
-            return { populate: (a, b) => ModelUserMock.ans };
-          },
-        }
-      : ModelUserMock.ans;
+    return ModelUserMock.ans;
   }
 
-  static findById(a) {
-    return this.populates
-      ? {
-          populate: (a, b) => {
-            return { populate: (a, b) => ModelUserMock.ans };
-          },
-        }
-      : ModelUserMock.ans;
+  static findOneAndUpdate(a, b) {
+    ModelUserMock.ans = ModelUserMock.ans.filter((id) => id._id === a._id);
+    for (const key in ModelUserMock.ans) ModelUserMock.ans[key] = b[key];
+    return ModelUserMock.ans;
+  }
+
+  static findById(a, b) {
+    return ModelUserMock.ans.filter((id) => id._id === a);
+  }
+  static findOneAndRemove(a){
+    const index = ModelUserMock.ans.findIndex((id) => id._id === a._id);
+    return ModelUserMock.ans.splice(index, 1);
   }
 
   save(a) {
