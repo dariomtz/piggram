@@ -29,10 +29,10 @@ class Post {
   }
 
   async getPost(id) {
-    if (!Post.exist(id)) {
+    if (!this.exist(id)) {
       return Promise.reject(new NotFoundError(`Post doesn't exist`));
     }
-    return await PostModel.findById(id);
+    return await PostModel.findById(id).populate("userId",['username','name','image']);
   }
 
   async editPost(id, post) {
@@ -44,7 +44,7 @@ class Post {
   }
 
   async deletePost(id) {
-    if (!Post.exist(id)) {
+    if (!this.exist(id)) {
       return Promise.reject(new NotFoundError(`Post doesn't exist`));
     }
     await PostModel.findByIdAndDelete(id);
