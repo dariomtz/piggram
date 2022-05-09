@@ -55,7 +55,7 @@ class Post {
       "username",
       "name",
       "image",
-    ]);
+    ]).sort({publishedAt: -1});
   }
 
   async getPostsByUser(id) {
