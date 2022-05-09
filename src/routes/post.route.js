@@ -10,9 +10,11 @@ const postController = require("../controllers/post.controller");
 router.use(isAuthenticated);
 
 router.post("/", uploadFirebase.single("image"), async (req, res) => {
-  const postInput = req.body;
-  post[image] = req.file.path;
-  const post = await PostController.createPost(req.body);
+  const post = await PostController.createPost({
+    image: req.file.publicUrl,
+    userId: req.user._id,
+    ...req.body,
+  });
   res.send(post);
 });
 

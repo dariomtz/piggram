@@ -20,11 +20,10 @@ class Post {
     return doc !== null;
   }
 
-  async createPost({ image, description, publishedAt, userId }) {
+  async createPost({ image, description, userId }) {
     return await new PostModel({
       image,
       description,
-      publishedAt,
       userId,
     }).save();
   }
