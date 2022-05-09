@@ -2,6 +2,7 @@ require("dotenv").config();
 require("./config/passport");
 require("./config/db");
 
+var cors = require('cors')
 const express = require("express");
 const path = require("path");
 const YAML = require("yamljs");
@@ -18,18 +19,17 @@ const userRoute = require("./routes/user.route");
 const postRoute = require("./routes/post.route");
 
 const app = express();
+app.use(express.json());
 
-function corsCustom(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
+var corsOptions = {
+  origin: "http://localhost:4200",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  allowedHeaders:"Origin, X-Requested-With, Content-Type, Accept",
+  credentials:true,
 }
 
-app.use(corsCustom);
+app.use(cors(corsOptions));
+app.use(express.json());
 
 //Passport (Auth)
 app.use(
@@ -42,7 +42,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.json());
+
 
 //Home page
 app.get("/", (req, res) => {

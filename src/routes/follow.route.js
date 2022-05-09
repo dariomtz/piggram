@@ -33,7 +33,7 @@ router.get('/:id/count/following', handleErrorAsync(async(req, res)=>{
 router.post('/:id',handleErrorAsync(async (req,res)=>{
     let followee = req.params.id;
     let follow = await Follow.add(req.user._id.valueOf(), followee);
-    res.send(follow);
+    res.status(200).send({follow});
 }) )
 
 router.delete('/:id',handleErrorAsync(async(req,res)=>{
