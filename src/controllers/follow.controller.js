@@ -9,24 +9,32 @@ class Follow {
         if(!mongoose.isValidObjectId(id)){
             return Promise.reject(new InvalidInputError(`Invalid user ID`));
         }
-        let doc = await FollowModel.find({'followee':id},{followee:0,_id:0})
+        let doc = await FollowModel.find({'followee':id},{followee:0,_id:0,__v:0,followedAt:0, description:0})
         .populate('follower',['username','name','description','image']);
         if(doc === null){
             return [];
         }
-        return doc;
+        return doc.map(f=>f.follower);
+    }
+
+    async getCountFollowers(id){
+        return (await this.getFollowers(id)).length;
     }
 
     async getFollowing(id){
         if(!mongoose.isValidObjectId(id)){
             return Promise.reject(new InvalidInputError(`Invalid user ID`));
         }
-        let doc = await FollowModel.find({'follower':id},{follower:0,_id:0})
+        let doc = await FollowModel.find({'follower':id},{follower:0,_id:0,__v:0,followedAt:0,description:0})
         .populate('followee',['username','name','description','image']);
         if(doc == null){
             return [];
         }
-        return doc;
+        return doc.map(f=>f.followee);
+    }
+
+    async getCountFollowing(id){
+        return (await this.getFollowing(id)).length;
     }
 
     async find(follower, followee){
@@ -48,7 +56,6 @@ class Follow {
     }
 
     async add(follower, followee){
-        console.log(follower, ' ',followee);
         if(follower === followee){
             return Promise.reject(new InvalidInputError(`A user can't follow himself`));
         }

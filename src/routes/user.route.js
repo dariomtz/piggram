@@ -13,7 +13,7 @@ router.post("/", uploadFirebase.single("file"), async (req, res) => {
   res.status(201).send(user);
 });
 
-//path: user/
+//path: user/ 
 router.post("/profilePicture", uploadFirebase.single("file"), (req, res) => {
   const { file } = req;
   userController.saveProfilePicture(req.user._id, file.publicUrl); // Modificar la url
