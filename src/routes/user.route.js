@@ -22,13 +22,9 @@ router.post("/profilePicture", uploadFirebase.single("file"), (req, res) => {
 
 router.get("/search", isAuthenticated, async (req, res) => {
   const query = req.query.q;
-  const user = await userController.findUserByUsername(query);
-  const user2 = await userController.findUserByName(query);
-  const set = new Set(user.map(u => u.username));
-  user2.forEach(u => set.add(u.username));
+  const result = await userController.findUser(query);
   // TODO: move this to usercontroller as search method
   // make sure to return all data that is relevant to search
-  const result = Array.from(set);
   res.send(result);
 });
 
