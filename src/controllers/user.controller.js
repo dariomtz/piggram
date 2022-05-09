@@ -93,14 +93,32 @@ class User {
   }
 
   async findUserByUsername(username) {
-    const result = await UserModel.find({ username: { $regex: username } });
+    const result = await UserModel.find(
+      { username: { $regex: username } },
+      {
+        passportID: 0,
+        createdAt: 0,
+        __v: 0,
+        resgitrationCompleted: 0,
+        password: 0,
+      }
+    );
     if (result === null) {
       return [];
     }
     return result;
   }
   async findUserByName(name) {
-    const result = await UserModel.find({ name: { $regex: name } });
+    const result = await UserModel.find(
+      { name: { $regex: name } },
+      {
+        passportID: 0,
+        createdAt: 0,
+        __v: 0,
+        resgitrationCompleted: 0,
+        password: 0,
+      }
+    );
     if (result === null) {
       return [];
     }
@@ -110,8 +128,8 @@ class User {
   async findUser(param) {
     const user = await this.findUserByUsername(param);
     const user2 = await this.findUserByName(param);
-    const set = new Set(user.map(u => u.username));
-    user2.forEach(u => set.add(u.username));
+    const set = new Set(user.username);
+    user2.forEach((u) => set.add(u));
     const result = Array.from(set);
     return result;
   }
