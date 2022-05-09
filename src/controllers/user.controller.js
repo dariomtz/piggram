@@ -40,7 +40,6 @@ class User {
     if (!(await this.exist(id))) {
       return Promise.reject(new NotFoundError(`Invalid user ID`));
     }
-    console.log("buscando por ID");
     let doc = await UserModel.findById(id, {
       passportID: 0,
       createdAt: 0,
@@ -105,6 +104,15 @@ class User {
     if (result === null) {
       return [];
     }
+    return result;
+  }
+
+  async findUser(param) {
+    const user = await this.findUserByUsername(param);
+    const user2 = await this.findUserByName(param);
+    const set = new Set(user.map(u => u.username));
+    user2.forEach(u => set.add(u.username));
+    const result = Array.from(set);
     return result;
   }
 }
