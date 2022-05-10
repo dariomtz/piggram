@@ -5,29 +5,36 @@ const { NotFoundError, InvalidInputError } = require("../utils/errors");
 
 class Like {
   async getByPost(postId) {
-    let doc = await LikeModel.find({ postId }, { _id: 0, postId: 0 }).populate(
+    let doc = await LikeModel.find({ postId }, { _id: 0, postId: 0, likedAt:0}).populate(
       "userId",
-      ["username", "name", "description", "image"]
+      ["username", "name", "image"]
     );
+    console.log(doc);
     return doc || [];
   }
 
+  async getCountByPost(postId) {
+    return (await (this.getByPost(postId))).length;
+  }
+
   async getByUser(userId) {
-    let doc = await LikeModel.find({ userId }, { _id: 0, userId: 0 }).populate(
+    let doc = await LikeModel.find({ userId }, { _id: 0, userId: 0,likedAt:0 }).populate(
       "postId"
     );
     return doc || [];
   }
 
   async find(postId, userId) {
-    let doc = await LikeModel.findOne({ userId, postId }, { _id: 0 })
-      .populate("userId", ["username", "name", "description", "image"])
-      .populate("postId");
-    return doc || {};
+    let doc = await LikeModel.findOne({ userId, postId }, { _id: 0, likedAt:0 })
+      .populate("userId", ["username", "name", "image"]);
+    return doc;
   }
 
   async exist(postId, userId) {
+    //console.log(postId,userId);
+    console.log({ userId, postId });
     let doc = await LikeModel.findOne({ userId, postId }, { _id: 0 });
+    console.log(doc);
     return doc !== null;
   }
 

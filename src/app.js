@@ -54,7 +54,7 @@ app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 
 app.use("/auth", authRoute);
 app.use("/follows", followRoute);
-app.use("/likes", likeRoute);
+app.use("/like", likeRoute);
 app.use("/user", userRoute);
 app.use("/post", postRoute);
 
