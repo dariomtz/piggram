@@ -17,6 +17,7 @@ const followRoute = require("./routes/follow.route");
 const likeRoute = require("./routes/like.route");
 const userRoute = require("./routes/user.route");
 const postRoute = require("./routes/post.route");
+const commentRoute = require("./routes/comment.route")
 
 const app = express();
 app.use(express.json());
@@ -57,6 +58,7 @@ app.use("/follows", followRoute);
 app.use("/like", likeRoute);
 app.use("/user", userRoute);
 app.use("/post", postRoute);
+app.use("/comment",commentRoute);
 
 app.use((err, req, res, next) => {
   console.log("error\n", err.message);

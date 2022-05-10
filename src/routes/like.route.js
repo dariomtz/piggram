@@ -15,7 +15,6 @@ router.get('/user/:userId',handleErrorAsync(async (req,res)=>{
     let {userId} = req.params;
     let likes = await Like.getByUser(userId);
     res.send(likes);
-    
 }))
 
 router.get('/post/:postId/count',handleErrorAsync(async (req,res)=>{
@@ -27,7 +26,6 @@ router.get('/post/:postId/count',handleErrorAsync(async (req,res)=>{
 router.get('/:postId',handleErrorAsync(async (req,res)=>{
     let {postId} = req.params;
     let liked = await Like.exist(postId,req.user._id);
-    console.log(liked);
     res.send(liked);
 }))
 

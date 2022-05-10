@@ -9,7 +9,6 @@ class Like {
       "userId",
       ["username", "name", "image"]
     );
-    console.log(doc);
     return doc || [];
   }
 
@@ -31,10 +30,7 @@ class Like {
   }
 
   async exist(postId, userId) {
-    //console.log(postId,userId);
-    console.log({ userId, postId });
     let doc = await LikeModel.findOne({ userId, postId }, { _id: 0 });
-    console.log(doc);
     return doc !== null;
   }
 
