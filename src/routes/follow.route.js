@@ -38,7 +38,6 @@ router.post('/:id',handleErrorAsync(async (req,res)=>{
 
 router.delete('/:id',handleErrorAsync(async(req,res)=>{
     let followee = req.params.id;
-    console.log("a");
     await Follow.remove(req.user._id,followee);
     res.send();
 }))
