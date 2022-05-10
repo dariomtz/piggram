@@ -10,7 +10,7 @@ class Comment {
             "userId",
             ["username", "name", "image"]
         );
-        console.log(doc);
+        if(doc)doc.reverse();
         return doc || [];
     }
 

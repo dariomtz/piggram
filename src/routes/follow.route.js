@@ -42,4 +42,10 @@ router.delete('/:id',handleErrorAsync(async(req,res)=>{
     res.send();
 }))
 
+router.get('/:id/find',handleErrorAsync(async(req,res)=>{
+    let followee = req.params.id;
+    const exist = await Follow.exist(req.user._id,followee);
+    res.send(exist);
+}))
+
 module.exports = router;
