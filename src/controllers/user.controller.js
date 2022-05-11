@@ -2,6 +2,8 @@ const UserModel = require("../models/schemas/user");
 const mongoose = require("mongoose");
 const axios = require("axios").default;
 const { InvalidInputError, NotFoundError } = require("../utils/errors");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 class User {
   async findByPassportId(id) {
@@ -10,6 +12,15 @@ class User {
       return Promise.reject(new Error(`User with id ${id} not found`));
     }
     return doc;
+  }
+
+  async findByEmail(email){
+    let doc = await UserModel.findOne({email}).lean();
+    if (doc === null) {
+      return Promise.reject(new Error(`User with email: ${id} not found`));
+    }
+    return doc;
+
   }
 
   async create(userData) {
@@ -132,6 +143,23 @@ class User {
     user2.forEach((u) => set.add(u));
     const result = Array.from(set);
     return result;
+  }
+
+  async createWithEmail(userData){
+    const {email, password, password2} = userData
+    if(password !== password2){
+      return Promise.reject(new InvalidInputError(`Password are not equals`));
+    }
+    if((await this.findByEmail(email)) !== null){
+      return Promise.reject(new InvalidInputError(`Email already used`));
+    }
+    const hash = bcrypt.hashSync(userData.password, saltRounds);
+    
+    return await this.create({
+      email,
+      password:hash
+    })
+
   }
 }
 

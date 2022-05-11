@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const path = require("path");
 const passport = require("passport");
+const userController = require("../controllers/user.controller");
 // path: auth/
 
 // path: auth/
@@ -47,6 +47,14 @@ router.get('/facebook/callback',
 
 router.get('/test', (req, res)=>{
   res.send(req.user);
+})
+
+//Create user with email
+//POST /
+router.post('/',(req,res)=>{
+  const {email, password, password2} = req.body;
+  await userController.createWithEmail({email, password, password2});
+  res.redirect(`${process.env.FRONTEND_URL}/`);
 })
 
 
