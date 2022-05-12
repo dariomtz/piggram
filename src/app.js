@@ -23,7 +23,7 @@ const app = express();
 app.use(express.json());
 
 var corsOptions = {
-  origin: "http://localhost:4200",
+  origin: "https://food-share-front-end.herokuapp.com/",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   allowedHeaders:"Origin, X-Requested-With, Content-Type, Accept",
   credentials:true,
