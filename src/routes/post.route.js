@@ -3,12 +3,12 @@ const PostController = require("../controllers/post.controller");
 const { uploadFirebase } = require("../utils/multer");
 const {handleErrorAsync} = require("../utils/hof"); 
 const {
-  isAuthenticated,
+  isRegistered,
   isAuthorized,
 } = require("../midlewares/auth.midleware");
 const postController = require("../controllers/post.controller");
 
-router.use(isAuthenticated);
+router.use(isRegistered);
 
 router.post("/", uploadFirebase.single("image"), handleErrorAsync(async (req, res) => {
   const post = await PostController.createPost({
@@ -20,7 +20,7 @@ router.post("/", uploadFirebase.single("image"), handleErrorAsync(async (req, re
 }));
 
 router.get("/", handleErrorAsync(async (req, res) => {
-  res.send(await PostController.getFeed());
+  res.send(await PostController.getFeed(req.user._id));
 }));
 
 router.get("/user/:id", handleErrorAsync(async (req, res) => {

@@ -2,6 +2,9 @@ const UserModel = require("../models/schemas/user");
 const mongoose = require("mongoose");
 const axios = require("axios").default;
 const { InvalidInputError, NotFoundError } = require("../utils/errors");
+const crypto = require("crypto");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 class User {
   async findByPassportId(id) {
@@ -12,6 +15,12 @@ class User {
     return doc;
   }
 
+  async findByEmail(email){
+    let doc = await UserModel.findOne({email:email});
+    return doc;
+
+  }
+
   async create(userData) {
     if (userData["username"] === undefined) {
       userData["username"] = (
@@ -20,7 +29,6 @@ class User {
           url: "https://randomuser.me/api/?inc=login",
         })
       ).data["results"][0]["login"]["username"];
-      console.log(userData["username"]);
     }
     var user = new UserModel(userData);
     let doc;
@@ -29,7 +37,6 @@ class User {
     } catch (err) {
       return Promise.reject(new Error(`Unable to create the user`));
     }
-    console.log("create", doc);
     return doc;
   }
   async list() {
@@ -44,7 +51,6 @@ class User {
       passportID: 0,
       createdAt: 0,
       __v: 0,
-      resgitrationCompleted: 0,
       password: 0,
     });
 
@@ -64,6 +70,7 @@ class User {
   }
 
   async update(id, propertiesToUpdate) {
+    propertiesToUpdate["resgitrationCompleted"] = true;
     const user = await UserModel.findOneAndUpdate(
       { _id: id },
       propertiesToUpdate,
@@ -132,6 +139,26 @@ class User {
     user2.forEach((u) => set.add(u));
     const result = Array.from(set);
     return result;
+  }
+
+  async createWithEmail(userData){
+    const {email, password, password2} = userData;
+    if(password !== password2){
+      return Promise.reject(new InvalidInputError(`Password are not equals`));
+    }
+    if((await this.findByEmail(email)) !== null){
+      return Promise.reject(new InvalidInputError(`Email already used`));
+    }
+    const hash = bcrypt.hashSync(password, saltRounds);
+    const id = crypto.randomBytes(16).toString("hex");
+    return await this.create({
+      email,
+      password:hash,
+      passportID: id,
+      name:"Temp Name",
+      description:"Hey there, I'm using FoodShare"
+    })
+
   }
 }
 

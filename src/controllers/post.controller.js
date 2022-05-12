@@ -1,6 +1,7 @@
 const PostModel = require("../models/schemas/post");
 const mongoose = require("mongoose");
 const { NotFoundError } = require("../utils/errors");
+const Follow = require("./follow.controller");
 const userController = require("./user.controller");
 
 class Post {
@@ -32,7 +33,11 @@ class Post {
     if (!this.exist(id)) {
       return Promise.reject(new NotFoundError(`Post doesn't exist`));
     }
-    return await PostModel.findById(id).populate("userId",['username','name','image']);
+    return await PostModel.findById(id).populate("userId", [
+      "username",
+      "name",
+      "image",
+    ]);
   }
 
   async editPost(id, post) {
@@ -50,12 +55,13 @@ class Post {
     await PostModel.findByIdAndDelete(id);
   }
 
-  async getFeed() {
-    return await PostModel.find({}).populate("userId", [
-      "username",
-      "name",
-      "image",
-    ]).sort({publishedAt: -1});
+  async getFeed(id) {
+    //get users follows
+    const follows = (await Follow.getFollowing(id)).map((f) => f._id);
+    //find posts by userId in userFollows
+    return await PostModel.find({ userId: { $in: follows } })
+      .populate("userId", ["username", "name", "image"])
+      .sort({ publishedAt: -1 });
   }
 
   async getPostsByUser(id) {

@@ -67,7 +67,7 @@ app.use(express.json());
 app.use(
   cookieSession({
     maxAge: 24 * 60 * 60 * 1000,
-    keys: ["clave"], //clave para encriptar
+    keys: [process.env.SIGN], //clave para encriptar
   })
 );
 

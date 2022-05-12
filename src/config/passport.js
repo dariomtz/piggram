@@ -2,6 +2,8 @@ const passport = require("passport");
 const User = require("../controllers/user.controller");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook");
+const LocalStrategy = require("passport-local");
+const bcrypt = require("bcrypt");
 
 passport.serializeUser(function (user, done) {
   done(null, user.passportID);
@@ -33,9 +35,8 @@ passport.use(
             passportID: profile.id,
             email: profile.emails[0].value,
             name: profile.displayName,
-            description: "Hey I'm using piggram",
+            description: "Hey I'm using FoodShare",
             image: profile.photos[0].value,
-            //TODO: Get date of birth
           })
             .then(user => done(null, user))
             .catch(err => done(err));
@@ -62,7 +63,7 @@ passport.use(
           User.create({
             passportID: profile.id,
             name: profile.displayName,
-            description: "Hey Im using piggram",
+            description: "Hey Im using FoodShare",
             email: profile.emails[0].value,
             image: profile.photos[0].value,
           })
@@ -71,4 +72,23 @@ passport.use(
         });
     }
   )
+);
+
+//Local strategy
+passport.use(
+  new LocalStrategy((email, password, done) => {
+    User.findByEmail(email)
+      .then(user => {
+        bcrypt.compare(password, user.password, function (err, result) {
+          if (result) {
+            done(null, user);
+          } else {
+            done(null, false);
+          }
+        });
+      })
+      .catch(err => {
+        done(null, false);
+      });
+  })
 );

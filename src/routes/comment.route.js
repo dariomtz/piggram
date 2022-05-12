@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const {isAuthenticated} =require("../midlewares/auth.midleware");
+const {isRegistered} =require("../midlewares/auth.midleware");
 const Comment = require("../controllers/comment.controller");
 const {handleErrorAsync} = require("../utils/hof"); 
 
 
-router.use(isAuthenticated);
+router.use(isRegistered);
 
 //path: comment/
 router.get("/:postId", handleErrorAsync(async (req,res)=>{
