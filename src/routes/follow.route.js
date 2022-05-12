@@ -2,9 +2,9 @@ const router = require("express").Router();
 const Follow = require("../controllers/follow.controller");
 const {handleErrorAsync} = require("../utils/hof"); 
 
-const {isAuthenticated} =require("../midlewares/auth.midleware");
+const {isRegistered} =require("../midlewares/auth.midleware");
 
-router.use(isAuthenticated);
+router.use(isRegistered);
 
 router.get('/:id/followers', handleErrorAsync(async(req, res)=>{
     let id = req.params.id;

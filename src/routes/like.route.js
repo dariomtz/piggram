@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const {isAuthenticated} =require("../midlewares/auth.midleware");
+const {isRegistered} =require("../midlewares/auth.midleware");
 const Like = require("../controllers/like.controller");
 const {handleErrorAsync} = require("../utils/hof"); 
 
-router.use(isAuthenticated);
+router.use(isRegistered);
 
 router.get('/post/:postId', handleErrorAsync(async (req,res)=>{
     let {postId} = req.params;
