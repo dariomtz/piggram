@@ -20,7 +20,7 @@ router.post("/", uploadFirebase.single("image"), handleErrorAsync(async (req, re
 }));
 
 router.get("/", handleErrorAsync(async (req, res) => {
-  res.send(await PostController.getFeed());
+  res.send(await PostController.getFeed(req.user._id));
 }));
 
 router.get("/user/:id", handleErrorAsync(async (req, res) => {
