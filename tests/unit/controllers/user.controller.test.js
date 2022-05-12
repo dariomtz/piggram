@@ -3,7 +3,6 @@ const proxyquire = require("proxyquire");
 const ModelUserMock = require("../mocks/model.user.mock");
 const MongooseMock = require("../mocks/mongoose.mock");
 
-const {InvalidInputError} = require('../../../src/utils/errors');
 const User = proxyquire("../../../src/controllers/user.controller", {
   "../models/schemas/user": ModelUserMock,
   "mongoose": MongooseMock,
