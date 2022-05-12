@@ -28,6 +28,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [process.env.CLIENT],
+    credentials: true,
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   },
 });
 
