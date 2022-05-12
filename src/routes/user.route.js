@@ -23,6 +23,11 @@ router.post("/profilePicture",isAuthenticated, uploadFirebase.single("file"),han
 //path: user/search
 router.get("/search", isRegistered, handleErrorAsync(async (req, res) => {
   const query = req.query.q;
+  // console.log(query);
+  if (query == ''){
+    res.send([])
+    return
+  }
   const result = await userController.findUser(query);
   // TODO: move this to usercontroller as search method
   // make sure to return all data that is relevant to search
