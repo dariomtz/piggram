@@ -11,10 +11,10 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (id, done) {
   User.findByPassportId(id)
-    .then((user) => {
+    .then(user => {
       done(null, user);
     })
-    .catch((err) => done(err));
+    .catch(err => done(err));
 });
 
 //Google strategy
@@ -23,14 +23,14 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://food-share-back-end.herokuapp.com/auth/google/callback",
+      callbackURL: `${process.env.SERVER}/auth/google/callback`,
     },
     function (accessToken, refreshToken, profile, done) {
       User.findByPassportId(profile.id)
-        .then((user) => {
+        .then(user => {
           done(null, user);
         })
-        .catch((err) => {
+        .catch(err => {
           User.create({
             passportID: profile.id,
             email: profile.emails[0].value,
@@ -38,8 +38,8 @@ passport.use(
             description: "Hey I'm using FoodShare",
             image: profile.photos[0].value,
           })
-            .then((user) => done(null, user))
-            .catch((err) => done(err));
+            .then(user => done(null, user))
+            .catch(err => done(err));
         });
     }
   )
@@ -51,15 +51,15 @@ passport.use(
     {
       clientID: process.env.FACEBOOK_APP_ID,
       clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: "https://food-share-back-end.herokuapp.com/auth/facebook/callback",
+      callbackURL: `${process.env.SERVER}/auth/facebook/callback`,
       profileFields: ["id", "displayName", "picture", "email", "birthday"],
     },
     function (accessToken, refreshToken, profile, done) {
       User.findByPassportId(profile.id)
-        .then((user) => {
+        .then(user => {
           done(null, user);
         })
-        .catch((err) => {
+        .catch(err => {
           User.create({
             passportID: profile.id,
             name: profile.displayName,
@@ -67,8 +67,8 @@ passport.use(
             email: profile.emails[0].value,
             image: profile.photos[0].value,
           })
-            .then((user) => done(null, user))
-            .catch((err) => done(err));
+            .then(user => done(null, user))
+            .catch(err => done(err));
         });
     }
   )
@@ -78,7 +78,7 @@ passport.use(
 passport.use(
   new LocalStrategy((email, password, done) => {
     User.findByEmail(email)
-      .then((user) => {
+      .then(user => {
         bcrypt.compare(password, user.password, function (err, result) {
           if (result) {
             done(null, user);
@@ -87,7 +87,7 @@ passport.use(
           }
         });
       })
-      .catch((err) => {
+      .catch(err => {
         done(null, false);
       });
   })
