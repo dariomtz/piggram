@@ -1,8 +1,24 @@
+const jwt = require("jsonwebtoken");
+const userController = require("../controllers/user.controller");
+
 function isAuthenticated(req, res, next) {
-  if (req.user != null && req.user["passportID"] != null) {
+  if (req.user !== null && req.user !== undefined) {
     next();
   } else {
-    res.status(401).send({ error: "Not authorizedd" });
+    res.status(401).send({ error: "Not logged in" });
+  }
+}
+
+function isRegistered(req,res,next){
+  if (req.user === null || req.user === undefined) {
+    res.status(401).send({ error: "Not logged in" });
+  } else {
+    if(req.user.resgitrationCompleted){
+      next();
+    }
+    else{
+      res.status(401).send({ error: "User not completed" });
+    }
   }
 }
 
@@ -12,4 +28,5 @@ function isAuthorized(req, res, next) {
   next();
 }
 
-module.exports = { isAuthenticated, isAuthorized };
+
+module.exports = { isAuthenticated, isAuthorized, isRegistered};
