@@ -14,7 +14,10 @@ passport.deserializeUser(function (id, done) {
     .then(user => {
       done(null, user);
     })
-    .catch(err => done(err));
+    .catch(err =>{
+      
+      done(err);
+    });
 });
 
 //Google strategy

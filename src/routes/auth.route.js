@@ -4,6 +4,7 @@ const userController = require("../controllers/user.controller");
 const { handleErrorAsync, handleError } = require("../utils/hof");
 const { isRegistered } = require("../midlewares/auth.midleware");
 const { InvalidInputError } = require("../utils/errors");
+var jwt = require('jsonwebtoken');
 // path: auth/
 
 // path: auth/
@@ -28,7 +29,8 @@ router.get(
 // GET /google/callback
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   // Successful authentication, redirect home.
-  res.redirect(`${process.env.FRONTEND_URL}/home`);
+  var token = jwt.sign({token:req.user.passportID}, process.env.SIGN);
+  res.redirect(`${process.env.FRONTEND_URL}/logged/${token}`);
 });
 
 // GET /facebook/login
@@ -46,7 +48,9 @@ router.get(
   }),
   (req, res) => {
     // Successful authentication, redirect home.
-    res.redirect(`${process.env.FRONTEND_URL}/home`);
+    var token = jwt.sign(req.user.passportId, process.env.SIGN);
+    res.send({token});
+    //res.redirect(`${process.env.FRONTEND_URL}/home`);
   }
 );
 
@@ -73,7 +77,8 @@ router.post(
   "/login",
   passport.authenticate("local", { failureRedirect: "/auth/failed" }),
   (req, res) => {
-    res.send();
+    var token = jwt.sign({token:req.user.passportID}, process.env.SIGN);
+    res.send({token});
   }
 );
 
