@@ -11,87 +11,87 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "localhost:3000"
 tags:
-- name: "user"
-  description: "Operations about user"
-- name: "post"
-  description: "Operations about posts"
-- name: "comment"
-  description: "Operations about comment"
-- name: "likes"
-  description: "Operations about likes"
-- name: "follows"
-  description: "Operations about follows"
+  - name: "user"
+    description: "Operations about user"
+  - name: "post"
+    description: "Operations about posts"
+  - name: "comment"
+    description: "Operations about comment"
+  - name: "likes"
+    description: "Operations about likes"
+  - name: "follows"
+    description: "Operations about follows"
 
 schemes:
-- "https"
-- "http"
+  - "https"
+  - "http"
 paths:
-  /signup:
+  /user/:
     post:
       tags:
-      - "user"
+        - "user"
       summary: "Creates a new account and logs in"
       description: ""
       operationId: "signup"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "User information"
-        required: true
-        schema:
-          $ref: "#/definitions/UserSignup"
+        - in: "body"
+          name: "body"
+          description: "User information"
+          required: true
+          schema:
+            $ref: "#/definitions/UserSignup"
       responses:
         "200":
           description: "User created"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-  /login:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /user/profilePicture:
     post:
       tags:
-      - "user"
-      summary: "Logs user into account"
+        - "user"
+      summary: "Upload user image"
       description: ""
-      operationId: "login"
+      operationId: "Upload"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "User credentials"
-        required: true
-        schema:
-          $ref: "#/definitions/UserCredentials"
+        - in: "body"
+          name: "body"
+          description: "User credentials"
+          required: true
+          schema:
+            $ref: "#/definitions/UserCredentials"
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-        
-  /logout:
-    post:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+
+  /user/search?q=query:
+    get:
       tags:
-      - "user"
-      summary: "Logout from current account"
+        - "user"
+      summary: "Search a user by username or name"
       description: ""
-      operationId: "logout"
+      operationId: "Search"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
 
       responses:
         "200":
@@ -99,31 +99,20 @@ paths:
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-        
-  /user/{id}:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /user:
     get:
       tags:
-      - "user"
-      summary: "Gets specified user"
+        - "user"
+      summary: "Get the session user"
       description: ""
       operationId: "getUser"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
-      parameters:
-      - in: "query"
-        name: "brief"
-        required: true
-        type: "boolean"
-        description: "If set, will return only username and image"
-      - in: "path"
-        name: "id"
-        required: true
-        type: "String"
+        - "application/json"
       responses:
         200:
           description: "Success"
@@ -138,30 +127,68 @@ paths:
         403:
           description: "Forbidden"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /user/:id:
+    get:
+      tags:
+        - "user"
+      summary: "Gets specified user"
+      description: ""
+      operationId: "getById"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "query"
+          name: "brief"
+          required: true
+          type: "boolean"
+          description: "If set, will return only username and image"
+        - in: "path"
+          name: "id"
+          required: true
+          type: "String"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/User"
+        400:
+          description: "Invalid input"
+        401:
+          description: "unauthenticated"
+        403:
+          description: "Forbidden"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     put:
       tags:
-      - "user"
-      summary: "Edits specified user"
+        - "user"
+      summary: "Edits your user"
       description: ""
       operationId: "modifyUser"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "id"
-        required: true
-        type: "String"
-      - in: "body"
-        name: "body"
-        description: "User information"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
+        - in: "path"
+          name: "id"
+          required: true
+          type: "String"
+        - in: "body"
+          name: "body"
+          description: "User information"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
       responses:
         "200":
           description: "Success"
@@ -172,26 +199,26 @@ paths:
         "403":
           description: "Forbidden"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     delete:
       tags:
-      - "user"
-      summary: "Edits specified user"
+        - "user"
+      summary: "Delete your user"
       description: ""
       operationId: "deleteUser"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "id"
-        required: true
-        type: "String"
-        schema:
-          $ref: "#/definitions/User"
+        - in: "path"
+          name: "id"
+          required: true
+          type: "String"
+          schema:
+            $ref: "#/definitions/User"
       responses:
         "200":
           description: "Success"
@@ -202,21 +229,21 @@ paths:
         "403":
           description: "Forbidden"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-        
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+
   /posts:
     get:
       tags:
-      - "post"
+        - "post"
       summary: "Returns feed of posts"
       description: ""
       operationId: "getPosts"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         "200":
           description: Success
@@ -230,415 +257,534 @@ paths:
         "405":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     post:
       tags:
-      - "post"
+        - "post"
       summary: "Creates new post"
       description: ""
       operationId: "createPost"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Post information"
-        required: true
-        schema:
-          $ref: "#/definitions/NewPost"
+        - in: "body"
+          name: "body"
+          description: "Post information"
+          required: true
+          schema:
+            $ref: "#/definitions/NewPost"
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"    
-  
-  /posts/{postId}:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+
+  /posts/:id:
     put:
       tags:
-      - "post"
+        - "post"
       summary: "Updates existing post"
       description: ""
       operationId: "updatePost"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
-      - in: "body"
-        name: "body"
-        description: "Post information"
-        required: true
-        schema:
-          $ref: "#/definitions/NewPost"
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
+        - in: "body"
+          name: "body"
+          description: "Post information"
+          required: true
+          schema:
+            $ref: "#/definitions/NewPost"
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users" 
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     delete:
       tags:
-      - "post"
+        - "post"
       summary: "Remove existing post"
       description: ""
       operationId: "deletePost"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users" 
-    
-  /posts/users/{userId}:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     get:
       tags:
-      - "post"
+        - "post"
+      summary: "Get existing post"
+      description: ""
+      operationId: "deletePost"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+
+  /posts/users/userId:
+    get:
+      tags:
+        - "post"
       summary: "Returns posts of specified user"
       description: ""
       operationId: "getUserPosts"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "userId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "userId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-  /posts/comments/{postId}:
-    get:
-      tags:
-      - "post"
-      summary:  "Returns comments of specified post"
-      operationId: "getComments"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
-      responses:
-        "200":
-          description: "Success"
-        "400":
-          description: "Invalid input"
-      security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-    post:
-      tags:
-      - "post"
-      summary:  "Creates a new comment in specified post"
-      operationId: "PostComments"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
-      - in: "body"
-        name: "body"
-        description: "Comment information"
-        required: true
-        schema:
-          $ref: "#/definitions/NewComment"
-      responses:
-        "200":
-          description: "Success"
-        "400":
-          description: "Invalid input"
-      security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
 
-  /comments/{commentId}:
+  /comments/:postId:
     get:
       tags:
-      - "comment"
-      summary:  "Returns specified comment"
+        - "comment"
+      summary: "Returns specified comment"
       operationId: "getComment"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "commentId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "commentId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-    put:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /comments:
+    post:
       tags:
-      - "comment"
-      summary:  "Updates specified comment"
+        - "comment"
+      summary: "Post specified comment"
       operationId: "PostComments"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
-      - in: "body"
-        name: "body"
-        description: "Comment information"
-        required: true
-        schema:
-          $ref: "#/definitions/NewComment"
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
+        - in: "body"
+          name: "body"
+          description: "Comment information"
+          required: true
+          schema:
+            $ref: "#/definitions/NewComment"
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /comments/:commentId:
     delete:
       tags:
-      - "comment"
-      summary:  "Remove specified comment"
+        - "comment"
+      summary: "Remove your comment"
       operationId: "removeComment"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "commentId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "commentId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
 
-  /likes/{postId}:
+  /likes/post/:postId:
     get:
       tags:
-      - "likes"
-      summary:  "Returns post's count of likes"
+        - "likes"
+      summary: "Get the likes based on the post"
       operationId: "getLikes"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /likes/user/:userId:
+    get:
+      tags:
+        - "likes"
+      summary: "Get likes based on user"
+      operationId: "getLikes"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+
+  /likes/post/:postId/count:
+    get:
+      tags:
+        - "likes"
+      summary: "Returns post's count of likes"
+      operationId: "getLikes"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+
+  /likes/:postId:
+    get:
+      tags:
+        - "likes"
+      summary: "Check that the post exists"
+      operationId: "getLikes"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     post:
       tags:
-      - "likes"
-      summary:  "Add a like to specified post"
+        - "likes"
+      summary: "Add a like to specified post"
       operationId: "addLikes"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     delete:
       tags:
-      - "likes"
-      summary:  "Remove like from specified post"
+        - "likes"
+      summary: "Remove like from specified post"
       operationId: "removeLike"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
-    
-  /follows/{userId}:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+
+  /follows/:id:
     post:
       tags:
-      - "follows"
-      summary:  "add current user to specified user followers list"
+        - "follows"
+      summary: "add current user to specified user followers list"
       operationId: "addFollower"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
     delete:
       tags:
-      - "follows"
-      summary:  "Remove current user from specified user followers list"
+        - "follows"
+      summary: "Remove current user from specified user followers list"
       operationId: "removeFollower"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "postId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "postId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
 
-  /follows/{userId}/followers:
+  /follows/:id/followers:
     get:
       tags:
-      - "follows"
-      summary:  "Returns user's list of followers"
+        - "follows"
+      summary: "Returns user's list of followers"
       operationId: "getFollows"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "userId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "userId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"  
-  /follows/{userId}/following:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /follows/:id/count/followers:
     get:
       tags:
-      - "follows"
-      summary:  "Returns user's list of following"
+        - "follows"
+      summary: "Returns user's count of followers"
       operationId: "getFollows"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "userId"
-        type: "String"
-        required: true
+        - in: "path"
+          name: "userId"
+          type: "String"
+          required: true
       responses:
         "200":
           description: "Success"
         "400":
           description: "Invalid input"
       security:
-      - piggram_auth:
-        - "write:users"
-        - "read:users"  
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /follows/:id/following:
+    get:
+      tags:
+        - "follows"
+      summary: "Returns user's list of following"
+      operationId: "getFollows"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          type: "String"
+          required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /follows/:id/count/following:
+    get:
+      tags:
+        - "follows"
+      summary: "Returns user's count of following"
+      operationId: "getFollows"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          type: "String"
+          required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
+  /follows/:id/find:
+    get:
+      tags:
+        - "follows"
+      summary: "Returns if user exists"
+      operationId: "getFollows"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          type: "String"
+          required: true
+      responses:
+        "200":
+          description: "Success"
+        "400":
+          description: "Invalid input"
+      security:
+        - piggram_auth:
+            - "write:users"
+            - "read:users"
 
 securityDefinitions:
   piggram_auth:
@@ -663,26 +809,14 @@ definitions:
         type: "string"
       name:
         type: "string"
-      email:
-        type: "string"
       description:
         type: "string"
-      password:
-        type: "string"
       image:
-        type: "string"
-      creationTimestamp:
-        type: "string"
-      dateOfBirth:
-        type: "string"
-      twitter:
         type: "string"
   UserCredentials:
     type: "object"
     properties:
-      email:
-        type: "string"
-      password:
+      image:
         type: "string"
   UserSignup:
     type: "object"
@@ -695,7 +829,7 @@ definitions:
         type: "string"
       password:
         type: "string"
-      dateofBirth:
+      image:
         type: "string"
   NewPost:
     type: "object"
@@ -713,6 +847,8 @@ definitions:
         type: "string"
       likes:
         type: "int"
+      comment:
+        type: "string"
       timestamp:
         type: "string"
       userId:
