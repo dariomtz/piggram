@@ -13,6 +13,7 @@ const swaggerSetup = YAML.load("./src/docs/swagger.yaml");
 const { NotFoundError, InvalidInputError } = require("./utils/errors");
 const http = require("http");
 const { Server } = require("socket.io");
+const {getFromHeader, test} = require('./midlewares/auth.midleware');
 
 const authRoute = require("./routes/auth.route");
 const followRoute = require("./routes/follow.route");
@@ -29,7 +30,7 @@ const io = new Server(server, {
   cors: {
     origin: [process.env.CLIENT],
     credentials: true,
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "auth"],
   },
 });
 
@@ -58,12 +59,12 @@ io.on("connection", socket => {
 var corsOptions = {
   origin: process.env.CLIENT,
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept",
+  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, auth",
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 app.use(express.json());
+
 
 //Passport (Auth)
 app.use(
@@ -75,6 +76,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(getFromHeader);
 
 //Home page
 app.get("/", (req, res) => {
