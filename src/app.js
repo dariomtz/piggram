@@ -82,7 +82,7 @@ app.get("/", (req, res) => {
 });
 
 //Swagger
-app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerSetup));
+app.use("/doc-api", swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 
 app.use("/auth", authRoute);
 app.use("/follows", followRoute);
