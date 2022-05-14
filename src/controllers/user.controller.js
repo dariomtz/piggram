@@ -39,6 +39,7 @@ class User {
     }
     return doc;
   }
+  
   async list() {
     return await UserModel.find({});
   }
@@ -86,7 +87,7 @@ class User {
   async delete(id) {
     const user = await UserModel.findOneAndRemove({ _id: id });
     if (user) {
-      return "Borrado";
+      return user;
     }
     return Promise.reject(new NotFoundError(`user with the id: ${id}`));
   }

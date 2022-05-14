@@ -22,6 +22,7 @@ describe('followController',()=>{
                 {_id:2,follower:{'username':'c','name':'c','description':'c','image':'c'}}];
 
             ModelMock.ans =_doc
+            ModelMock.populateFind = true;
             MongooseMock.ans = true;
             //Act
             const followers = await Follow.getFollowers(0);
@@ -29,7 +30,7 @@ describe('followController',()=>{
             //Assert
             expect(followers.length).toEqual(_doc.length);
             for(let i = 0; i< _doc.length; i++)
-                expect(followers[i]["follower"]).toEqual(_doc[i].follower);
+                expect(followers[i]).toEqual(_doc[i].follower);
             
         });
 
@@ -37,6 +38,7 @@ describe('followController',()=>{
             //Arrange
             ModelMock.ans = null;
             MongooseMock.ans = true;
+            ModelMock.populateFind = true;
 
             //Act
             const followers = await Follow.getFollowers(0);
@@ -80,6 +82,7 @@ describe('followController',()=>{
 
             ModelMock.ans =_doc
             MongooseMock.ans = true;
+            ModelMock.populateFind = true;
             //Act
             const ans = await Follow.getFollowing(0);
 
@@ -94,6 +97,7 @@ describe('followController',()=>{
             //Arrange
             ModelMock.ans = null;
             MongooseMock.ans = true;
+            ModelMock.populateFind = true;
 
             //Act
             const followers = await Follow.getFollowing(0);

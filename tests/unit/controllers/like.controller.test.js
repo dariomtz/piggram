@@ -23,6 +23,7 @@ describe("likeController",()=>{
                 {'username':'c','name':'c','description':'c','image':'c'}
             ]
             ModelMock.ans = ans;
+            ModelMock.populateFind = true;
             
             //Act
             const res = await like.getByPost(0);
@@ -33,6 +34,7 @@ describe("likeController",()=>{
         it("Returns an empty list when likes not founds",async()=>{
             //Arrange
             ModelMock.ans = null;
+            ModelMock.populateFind = true;
             
             //Act
             const res = await like.getByPost(0);
@@ -50,6 +52,7 @@ describe("likeController",()=>{
                 {'image':'c','description':'c','publishedAt':'c','userId':2}
             ]
             ModelMock.ans = ans;
+            ModelMock.populateFind = true;
             
             //Act
             const res = await like.getByUser(0);
@@ -60,6 +63,7 @@ describe("likeController",()=>{
         it("Returns an empty list when likes not founds",async()=>{
             //Arrange
             ModelMock.ans = null;
+            ModelMock.populateFind = true;
             
             //Act
             const res = await like.getByUser(0);
@@ -77,6 +81,7 @@ describe("likeController",()=>{
                 postId:{'image':'a','description':'a','publishedAt':'a','userId':0}}
 
             ModelMock.ans = ans;
+            ModelMock.single = true;
             ModelMock.populates = true;
 
             //Act
@@ -87,7 +92,7 @@ describe("likeController",()=>{
             expect(res).toEqual(ans);
         })
 
-        it("returns an empty object if like not found", async()=>{
+        it("returns null if like not found", async()=>{
             //Arrange
             ModelMock.ans = null;
             ModelMock.populates = true;
@@ -97,7 +102,7 @@ describe("likeController",()=>{
             const res = await like.find(0,0);
 
             //Assert
-            expect(res).toEqual({});
+            expect(res).toEqual(null);
         })
     })
     describe("exist",()=>{
