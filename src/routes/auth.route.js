@@ -48,9 +48,8 @@ router.get(
   }),
   (req, res) => {
     // Successful authentication, redirect home.
-    var token = jwt.sign(req.user.passportId, process.env.SIGN);
-    res.send({token});
-    //res.redirect(`${process.env.FRONTEND_URL}/home`);
+    var token = jwt.sign({token:req.user.passportID}, process.env.SIGN);
+    res.redirect(`${process.env.FRONTEND_URL}/logged/${token}`);
   }
 );
 
